@@ -1,0 +1,215 @@
+{
+  "procedures": {
+    "work_confirmation": {
+      "title": "Create Work Confirmation",
+      "description": "Step-by-step guide to create a work confirmation in Oracle EBS R12 i-Supplier",
+      "category": "procurement",
+      "prerequisites": [
+        "Valid i-Supplier login credentials",
+        "Active purchase order with services",
+        "Proper authorization level"
+      ],
+      "steps": [
+        {
+          "step_id": "login",
+          "title": "Login to i-Supplier Portal",
+          "description": "Access the Oracle EBS R12 i-Supplier portal using your credentials",
+          "instructions": "Navigate to the i-Supplier portal URL and enter your username and password",
+          "screenshot": "/static/images/login_screen.png",
+          "validation_criteria": ["Successfully logged in", "Dashboard visible"],
+          "next_steps": ["navigate_to_confirmations"]
+        },
+        {
+          "step_id": "navigate_to_confirmations",
+          "title": "Navigate to Work Confirmations",
+          "description": "Access the Work Confirmations section from the main menu",
+          "instructions": "Click on 'Procurement' in the main menu, then select 'Work Confirmations'",
+          "screenshot": "/static/images/navigate_confirmations.png",
+          "validation_criteria": ["Work Confirmations page loaded"],
+          "next_steps": ["create_new_confirmation"]
+        },
+        {
+          "step_id": "create_new_confirmation",
+          "title": "Create New Work Confirmation",
+          "description": "Initiate the creation of a new work confirmation",
+          "instructions": "Click the 'Create' button to start a new work confirmation",
+          "screenshot": "/static/images/create_confirmation.png",
+          "validation_criteria": ["New confirmation form opened"],
+          "next_steps": ["select_purchase_order"]
+        },
+        {
+          "step_id": "select_purchase_order",
+          "title": "Select Purchase Order",
+          "description": "Choose the purchase order for which you want to create the work confirmation",
+          "instructions": "Use the search functionality to find and select the appropriate purchase order",
+          "screenshot": "/static/images/select_po.png",
+          "validation_criteria": ["Purchase order selected", "PO details populated"],
+          "next_steps": ["enter_confirmation_details"]
+        },
+        {
+          "step_id": "enter_confirmation_details",
+          "title": "Enter Confirmation Details",
+          "description": "Fill in the work confirmation details including quantities and dates",
+          "instructions": "Enter the confirmed quantity, completion date, and any additional notes",
+          "screenshot": "/static/images/confirmation_details.png",
+          "validation_criteria": ["All required fields completed", "Quantities within PO limits"],
+          "next_steps": ["review_and_submit"]
+        },
+        {
+          "step_id": "review_and_submit",
+          "title": "Review and Submit",
+          "description": "Review all entered information and submit the work confirmation",
+          "instructions": "Verify all details are correct and click 'Submit' to finalize the confirmation",
+          "screenshot": "/static/images/review_submit.png",
+          "validation_criteria": ["Confirmation submitted successfully", "Confirmation number generated"],
+          "next_steps": []
+        }
+      ]
+    },
+    "view_purchase_orders": {
+      "title": "View Purchase Orders",
+      "description": "How to view and search purchase orders in i-Supplier",
+      "category": "procurement",
+      "prerequisites": [
+        "Valid i-Supplier login credentials",
+        "Access to purchase order information"
+      ],
+      "steps": [
+        {
+          "step_id": "login",
+          "title": "Login to i-Supplier Portal",
+          "description": "Access the Oracle EBS R12 i-Supplier portal",
+          "instructions": "Navigate to the i-Supplier portal and login with your credentials",
+          "screenshot": "/static/images/login_screen.png",
+          "validation_criteria": ["Successfully logged in"],
+          "next_steps": ["navigate_to_pos"]
+        },
+        {
+          "step_id": "navigate_to_pos",
+          "title": "Navigate to Purchase Orders",
+          "description": "Access the Purchase Orders section",
+          "instructions": "Click on 'Procurement' then select 'Purchase Orders'",
+          "screenshot": "/static/images/navigate_pos.png",
+          "validation_criteria": ["Purchase Orders page loaded"],
+          "next_steps": ["search_pos"]
+        },
+        {
+          "step_id": "search_pos",
+          "title": "Search Purchase Orders",
+          "description": "Use search filters to find specific purchase orders",
+          "instructions": "Enter search criteria such as PO number, date range, or status",
+          "screenshot": "/static/images/search_pos.png",
+          "validation_criteria": ["Search results displayed"],
+          "next_steps": []
+        }
+      ]
+    },
+    "invoice_submission": {
+      "title": "Submit Invoice",
+      "description": "Process for submitting invoices through i-Supplier",
+      "category": "financial",
+      "prerequisites": [
+        "Valid purchase order or receipt",
+        "Invoice details and supporting documents"
+      ],
+      "steps": [
+        {
+          "step_id": "login",
+          "title": "Login to i-Supplier Portal",
+          "description": "Access the Oracle EBS R12 i-Supplier portal",
+          "instructions": "Navigate to the i-Supplier portal and login",
+          "screenshot": "/static/images/login_screen.png",
+          "validation_criteria": ["Successfully logged in"],
+          "next_steps": ["navigate_to_invoices"]
+        },
+        {
+          "step_id": "navigate_to_invoices",
+          "title": "Navigate to Invoices",
+          "description": "Access the Invoice submission section",
+          "instructions": "Click on 'Financial' then select 'Submit Invoice'",
+          "screenshot": "/static/images/navigate_invoices.png",
+          "validation_criteria": ["Invoice submission page loaded"],
+          "next_steps": ["create_invoice"]
+        },
+        {
+          "step_id": "create_invoice",
+          "title": "Create New Invoice",
+          "description": "Start the invoice creation process",
+          "instructions": "Click 'Create Invoice' and select the invoice type",
+          "screenshot": "/static/images/create_invoice.png",
+          "validation_criteria": ["Invoice form opened"],
+          "next_steps": ["enter_invoice_details"]
+        },
+        {
+          "step_id": "enter_invoice_details",
+          "title": "Enter Invoice Information",
+          "description": "Fill in all required invoice details",
+          "instructions": "Enter invoice number, date, amount, and line item details",
+          "screenshot": "/static/images/invoice_details.png",
+          "validation_criteria": ["All required fields completed"],
+          "next_steps": ["attach_documents"]
+        },
+        {
+          "step_id": "attach_documents",
+          "title": "Attach Supporting Documents",
+          "description": "Upload any required supporting documentation",
+          "instructions": "Click 'Attach' to upload receipts, delivery notes, or other documents",
+          "screenshot": "/static/images/attach_docs.png",
+          "validation_criteria": ["Documents attached successfully"],
+          "next_steps": ["submit_invoice"]
+        },
+        {
+          "step_id": "submit_invoice",
+          "title": "Submit Invoice for Processing",
+          "description": "Final submission of the invoice",
+          "instructions": "Review all details and click 'Submit' to send for approval",
+          "screenshot": "/static/images/submit_invoice.png",
+          "validation_criteria": ["Invoice submitted successfully"],
+          "next_steps": []
+        }
+      ]
+    }
+  },
+  "oracle_modules": {
+    "purchase_orders": {
+      "description": "Access and manage purchase orders",
+      "available_queries": [
+        "search_by_po_number",
+        "search_by_supplier",
+        "search_by_date_range",
+        "view_po_details",
+        "check_po_status"
+      ]
+    },
+    "invoices": {
+      "description": "Invoice management and tracking",
+      "available_queries": [
+        "search_invoices",
+        "view_invoice_status",
+        "track_payment_status",
+        "view_invoice_history"
+      ]
+    },
+    "suppliers": {
+      "description": "Supplier information and management",
+      "available_queries": [
+        "search_suppliers",
+        "view_supplier_details",
+        "check_supplier_status",
+        "view_supplier_performance"
+      ]
+    }
+  },
+  "validation_rules": {
+    "work_confirmation": {
+      "quantity_must_not_exceed_po": true,
+      "completion_date_required": true,
+      "po_must_be_active": true
+    },
+    "invoice_submission": {
+      "po_or_receipt_required": true,
+      "amount_must_match_po": true,
+      "invoice_number_unique": true
+    }
+  }
+}

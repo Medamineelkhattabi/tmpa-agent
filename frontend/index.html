@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oracle EBS R12 i-Supplier Assistant - Tanger Med</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <i class="fas fa-robot"></i>
+                    <div class="logo-text">
+                        <h1>Oracle EBS Assistant</h1>
+                        <span>Tanger Med i-Supplier Portal</span>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button id="progress-btn" class="header-btn" title="View Progress">
+                        <i class="fas fa-tasks"></i>
+                    </button>
+                    <button id="procedures-btn" class="header-btn" title="Available Procedures">
+                        <i class="fas fa-list"></i>
+                    </button>
+                    <button id="reset-btn" class="header-btn" title="Reset Session">
+                        <i class="fas fa-refresh"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Sidebar -->
+            <aside class="sidebar" id="sidebar">
+                <div class="sidebar-header">
+                    <h3>Session Info</h3>
+                    <button id="close-sidebar" class="close-btn">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="session-info">
+                    <div class="info-item">
+                        <label>Session ID:</label>
+                        <span id="session-id-display">-</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Status:</label>
+                        <span id="session-status" class="status-badge">Not Started</span>
+                    </div>
+                </div>
+
+                <div class="progress-section">
+                    <h4>Current Procedure</h4>
+                    <div id="current-procedure">
+                        <span class="no-procedure">No active procedure</span>
+                    </div>
+                    
+                    <div id="procedure-progress" class="progress-container" style="display: none;">
+                        <div class="progress-header">
+                            <span id="procedure-title">-</span>
+                            <span id="step-counter">0/0</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div id="progress-fill" class="progress-fill"></div>
+                        </div>
+                        <div id="completed-steps" class="steps-list"></div>
+                    </div>
+                </div>
+
+                <div class="procedures-section">
+                    <h4>Available Procedures</h4>
+                    <div id="procedures-list" class="procedures-list">
+                        <div class="loading">Loading procedures...</div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Chat Area -->
+            <div class="chat-container">
+                <div class="chat-messages" id="chat-messages">
+                    <div class="welcome-message">
+                        <div class="welcome-content">
+                            <i class="fas fa-robot welcome-icon"></i>
+                            <h2>Welcome to Oracle EBS R12 i-Supplier Assistant</h2>
+                            <p>I'm here to help you navigate Oracle EBS procedures for Tanger Med. I can:</p>
+                            <ul>
+                                <li><i class="fas fa-check"></i> Guide you through step-by-step procedures</li>
+                                <li><i class="fas fa-check"></i> Show contextual screenshots at each step</li>
+                                <li><i class="fas fa-check"></i> Track your progress through workflows</li>
+                                <li><i class="fas fa-check"></i> Query Oracle modules (POs, invoices, suppliers)</li>
+                            </ul>
+                            <p class="get-started">Type a message below or click on a suggestion to get started!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Screenshot Modal -->
+                <div id="screenshot-modal" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>Step Screenshot</h3>
+                            <button class="close-modal" onclick="closeScreenshotModal()">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <img id="screenshot-image" src="" alt="Step Screenshot" />
+                            <div id="screenshot-caption"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Suggestions -->
+                <div class="suggestions-container" id="suggestions-container">
+                    <div class="suggestions" id="suggestions"></div>
+                </div>
+
+                <!-- Input Area -->
+                <div class="input-container">
+                    <div class="input-wrapper">
+                        <input 
+                            type="text" 
+                            id="message-input" 
+                            placeholder="Type your message here..." 
+                            autocomplete="off"
+                        >
+                        <button id="send-btn" class="send-btn" disabled>
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                    <div class="input-footer">
+                        <span class="help-text">
+                            Try: "Start work confirmation", "Show purchase orders", or "Help"
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Overlay -->
+        <div id="loading-overlay" class="loading-overlay">
+            <div class="loading-spinner">
+                <i class="fas fa-spinner fa-spin"></i>
+                <span>Processing...</span>
+            </div>
+        </div>
+
+        <!-- Toast Notifications -->
+        <div id="toast-container" class="toast-container"></div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
