@@ -1,0 +1,819 @@
+{
+  "procedures": {
+    "work_confirmation": {
+      "title": "Create Work Confirmation",
+      "description": "Step-by-step guide to create a work confirmation in Oracle EBS R12 i-Supplier",
+      "category": "procurement",
+      "difficulty": "intermediate",
+      "estimated_time": "10-15 minutes",
+      "ai_features": {
+        "smart_validation": true,
+        "auto_suggestions": true,
+        "predictive_text": true,
+        "error_detection": true
+      },
+      "prerequisites": [
+        "Valid i-Supplier login credentials",
+        "Active purchase order with services",
+        "Proper authorization level"
+      ],
+      "steps": [
+        {
+          "step_id": "login",
+          "title": "Login to i-Supplier Portal",
+          "description": "Access the Oracle EBS R12 i-Supplier portal using your credentials",
+          "instructions": "Navigate to the i-Supplier portal URL and enter your username and password",
+          "screenshot": "/static/images/login_screen.png",
+          "validation_criteria": ["Successfully logged in", "Dashboard visible"],
+          "ai_hints": ["Check caps lock if login fails", "Clear browser cache if page doesn't load"],
+          "next_steps": ["navigate_to_confirmations"]
+        },
+        {
+          "step_id": "navigate_to_confirmations",
+          "title": "Navigate to Work Confirmations",
+          "description": "Access the Work Confirmations section from the main menu",
+          "instructions": "Click on 'Procurement' in the main menu, then select 'Work Confirmations'",
+          "screenshot": "/static/images/navigate_confirmations.png",
+          "validation_criteria": ["Work Confirmations page loaded"],
+          "ai_hints": ["Use search if menu items are not visible", "Check user permissions if option is missing"],
+          "next_steps": ["create_new_confirmation"]
+        },
+        {
+          "step_id": "create_new_confirmation",
+          "title": "Create New Work Confirmation",
+          "description": "Initiate the creation of a new work confirmation",
+          "instructions": "Click the 'Create' button to start a new work confirmation",
+          "screenshot": "/static/images/create_confirmation.png",
+          "validation_criteria": ["New confirmation form opened"],
+          "ai_hints": ["Ensure you have proper permissions", "Check if there are draft confirmations to complete first"],
+          "next_steps": ["select_purchase_order"]
+        },
+        {
+          "step_id": "select_purchase_order",
+          "title": "Select Purchase Order",
+          "description": "Choose the purchase order for which you want to create the work confirmation",
+          "instructions": "Use the search functionality to find and select the appropriate purchase order",
+          "screenshot": "/static/images/select_po.png",
+          "validation_criteria": ["Purchase order selected", "PO details populated"],
+          "ai_hints": ["Filter by date range for recent POs", "Check PO status - must be approved"],
+          "next_steps": ["enter_confirmation_details"]
+        },
+        {
+          "step_id": "enter_confirmation_details",
+          "title": "Enter Confirmation Details",
+          "description": "Fill in the work confirmation details including quantities and dates",
+          "instructions": "Enter the confirmed quantity, completion date, and any additional notes",
+          "screenshot": "/static/images/confirmation_details.png",
+          "validation_criteria": ["All required fields completed", "Quantities within PO limits"],
+          "ai_hints": ["Quantity cannot exceed PO remaining quantity", "Date must be realistic completion date"],
+          "next_steps": ["review_and_submit"]
+        },
+        {
+          "step_id": "review_and_submit",
+          "title": "Review and Submit",
+          "description": "Review all entered information and submit the work confirmation",
+          "instructions": "Verify all details are correct and click 'Submit' to finalize the confirmation",
+          "screenshot": "/static/images/review_submit.png",
+          "validation_criteria": ["Confirmation submitted successfully", "Confirmation number generated"],
+          "ai_hints": ["Double-check all amounts before submitting", "Save confirmation number for future reference"],
+          "next_steps": []
+        }
+      ]
+    },
+    "supplier_registration": {
+      "title": "Supplier Self-Registration",
+      "description": "Complete supplier registration process in Oracle EBS i-Supplier",
+      "category": "supplier_management",
+      "difficulty": "beginner",
+      "estimated_time": "20-30 minutes",
+      "ai_features": {
+        "document_scanner": true,
+        "auto_fill": true,
+        "compliance_checker": true,
+        "smart_validation": true
+      },
+      "prerequisites": [
+        "Valid business registration documents",
+        "Bank account information",
+        "Tax registration certificates"
+      ],
+      "steps": [
+        {
+          "step_id": "access_registration",
+          "title": "Access Registration Portal",
+          "description": "Navigate to the supplier registration page",
+          "instructions": "Click on 'New Supplier Registration' from the main portal",
+          "screenshot": "/static/images/supplier_registration_start.png",
+          "validation_criteria": ["Registration form loaded"],
+          "ai_hints": ["Use Chrome or Firefox for best experience", "Disable pop-up blockers"],
+          "next_steps": ["company_information"]
+        },
+        {
+          "step_id": "company_information",
+          "title": "Enter Company Information",
+          "description": "Provide basic company details and legal information",
+          "instructions": "Fill in company name, registration number, address, and legal status",
+          "screenshot": "/static/images/company_info.png",
+          "validation_criteria": ["All mandatory fields completed", "Valid registration format"],
+          "ai_hints": ["Use official company name as registered", "Registration number format: RC-XXXXX"],
+          "next_steps": ["contact_details"]
+        },
+        {
+          "step_id": "contact_details",
+          "title": "Contact Information",
+          "description": "Add primary and secondary contact information",
+          "instructions": "Enter contact person details, phone numbers, and email addresses",
+          "screenshot": "/static/images/contact_details.png",
+          "validation_criteria": ["Valid email format", "Phone number verification"],
+          "ai_hints": ["Use business email domain", "Provide alternate contact for redundancy"],
+          "next_steps": ["banking_information"]
+        },
+        {
+          "step_id": "banking_information",
+          "title": "Banking Details",
+          "description": "Provide bank account information for payments",
+          "instructions": "Enter bank name, account number, IBAN, and SWIFT code",
+          "screenshot": "/static/images/banking_info.png",
+          "validation_criteria": ["Valid IBAN format", "Bank verification passed"],
+          "ai_hints": ["IBAN format: MA64 XXXX XXXX XXXX XXXX XXXX XX", "Use primary business account"],
+          "next_steps": ["document_upload"]
+        },
+        {
+          "step_id": "document_upload",
+          "title": "Upload Documents",
+          "description": "Upload required business documents and certifications",
+          "instructions": "Upload business license, tax certificate, and bank certificate",
+          "screenshot": "/static/images/document_upload.png",
+          "validation_criteria": ["All required documents uploaded", "File formats accepted"],
+          "ai_hints": ["PDF format preferred", "File size limit: 5MB per document"],
+          "next_steps": ["review_submit"]
+        },
+        {
+          "step_id": "review_submit",
+          "title": "Review and Submit",
+          "description": "Review all information and submit for approval",
+          "instructions": "Verify all details and submit registration for Tanger Med review",
+          "screenshot": "/static/images/registration_review.png",
+          "validation_criteria": ["Application submitted", "Reference number generated"],
+          "ai_hints": ["Save reference number", "Approval typically takes 3-5 business days"],
+          "next_steps": []
+        }
+      ]
+    },
+    "receipt_acknowledgment": {
+      "title": "Goods Receipt Acknowledgment",
+      "description": "Acknowledge receipt of goods and services in Oracle EBS",
+      "category": "procurement",
+      "difficulty": "intermediate",
+      "estimated_time": "5-10 minutes",
+      "ai_features": {
+        "barcode_scanner": true,
+        "quantity_validator": true,
+        "photo_capture": true,
+        "auto_matching": true
+      },
+      "prerequisites": [
+        "Delivered goods or completed services",
+        "Purchase order reference",
+        "Delivery receipt or service completion certificate"
+      ],
+      "steps": [
+        {
+          "step_id": "find_po",
+          "title": "Locate Purchase Order",
+          "description": "Find the purchase order for the received goods/services",
+          "instructions": "Search for PO using number, supplier name, or delivery date",
+          "screenshot": "/static/images/find_po_receipt.png",
+          "validation_criteria": ["PO found and displayed"],
+          "ai_hints": ["Use barcode scanner for quick PO lookup", "Check delivery note for PO reference"],
+          "next_steps": ["verify_delivery"]
+        },
+        {
+          "step_id": "verify_delivery",
+          "title": "Verify Delivery Details",
+          "description": "Confirm delivery details match the purchase order",
+          "instructions": "Check quantities, items, and delivery date against PO",
+          "screenshot": "/static/images/verify_delivery.png",
+          "validation_criteria": ["Delivery details verified"],
+          "ai_hints": ["Take photos of delivered items", "Note any discrepancies immediately"],
+          "next_steps": ["record_receipt"]
+        },
+        {
+          "step_id": "record_receipt",
+          "title": "Record Receipt",
+          "description": "Enter receipt details into the system",
+          "instructions": "Input received quantities, condition, and any notes",
+          "screenshot": "/static/images/record_receipt.png",
+          "validation_criteria": ["Receipt recorded successfully"],
+          "ai_hints": ["Partial receipts are allowed", "Note damaged items separately"],
+          "next_steps": ["confirm_receipt"]
+        },
+        {
+          "step_id": "confirm_receipt",
+          "title": "Confirm and Submit",
+          "description": "Final confirmation of goods receipt",
+          "instructions": "Review receipt details and submit for processing",
+          "screenshot": "/static/images/confirm_receipt.png",
+          "validation_criteria": ["Receipt confirmed", "Receipt number generated"],
+          "ai_hints": ["Receipt number needed for invoice matching", "Copy supplier on receipt confirmation"],
+          "next_steps": []
+        }
+      ]
+    },
+    "payment_inquiry": {
+      "title": "Payment Status Inquiry",
+      "description": "Check payment status and history for invoices",
+      "category": "financial",
+      "difficulty": "beginner",
+      "estimated_time": "3-5 minutes",
+      "ai_features": {
+        "smart_search": true,
+        "payment_predictor": true,
+        "notification_setup": true,
+        "export_tools": true
+      },
+      "prerequisites": [
+        "Invoice reference number or PO number",
+        "Supplier credentials"
+      ],
+      "steps": [
+        {
+          "step_id": "access_payments",
+          "title": "Access Payment Inquiry",
+          "description": "Navigate to payment inquiry section",
+          "instructions": "Go to Financial > Payment Inquiry from main menu",
+          "screenshot": "/static/images/payment_inquiry.png",
+          "validation_criteria": ["Payment inquiry page loaded"],
+          "ai_hints": ["Use advanced filters for better results", "Set date range for faster search"],
+          "next_steps": ["search_invoices"]
+        },
+        {
+          "step_id": "search_invoices",
+          "title": "Search Invoices",
+          "description": "Find invoices to check payment status",
+          "instructions": "Enter invoice number, PO number, or date range to search",
+          "screenshot": "/static/images/search_invoices_payment.png",
+          "validation_criteria": ["Search results displayed"],
+          "ai_hints": ["Wildcard search available with *", "Filter by payment status for targeted results"],
+          "next_steps": ["view_payment_details"]
+        },
+        {
+          "step_id": "view_payment_details",
+          "title": "View Payment Details",
+          "description": "Review detailed payment information",
+          "instructions": "Click on invoice to see payment status, dates, and amounts",
+          "screenshot": "/static/images/payment_details.png",
+          "validation_criteria": ["Payment details displayed"],
+          "ai_hints": ["Check payment terms for expected date", "Note any holds or issues"],
+          "next_steps": ["export_report"]
+        },
+        {
+          "step_id": "export_report",
+          "title": "Export Payment Report",
+          "description": "Export payment information for records",
+          "instructions": "Select export format and download payment report",
+          "screenshot": "/static/images/export_payment.png",
+          "validation_criteria": ["Report exported successfully"],
+          "ai_hints": ["Excel format for analysis", "PDF for sharing with stakeholders"],
+          "next_steps": []
+        }
+      ]
+    },
+    "contract_management": {
+      "title": "Contract Lifecycle Management",
+      "description": "Manage contracts from creation to renewal",
+      "category": "contract_management",
+      "difficulty": "advanced",
+      "estimated_time": "30-45 minutes",
+      "ai_features": {
+        "contract_analyzer": true,
+        "risk_assessment": true,
+        "renewal_alerts": true,
+        "clause_suggestions": true
+      },
+      "prerequisites": [
+        "Contract template or draft",
+        "Legal approval (if required)",
+        "Pricing and terms agreement"
+      ],
+      "steps": [
+        {
+          "step_id": "create_contract",
+          "title": "Create New Contract",
+          "description": "Initiate new contract creation process",
+          "instructions": "Select contract type and enter basic information",
+          "screenshot": "/static/images/create_contract.png",
+          "validation_criteria": ["Contract template loaded"],
+          "ai_hints": ["Choose appropriate contract type", "Standard templates reduce risk"],
+          "next_steps": ["define_terms"]
+        },
+        {
+          "step_id": "define_terms",
+          "title": "Define Contract Terms",
+          "description": "Set contract terms, conditions, and pricing",
+          "instructions": "Enter contract duration, pricing, delivery terms, and conditions",
+          "screenshot": "/static/images/contract_terms.png",
+          "validation_criteria": ["All terms defined"],
+          "ai_hints": ["AI suggests competitive pricing", "Standard payment terms: 30 days"],
+          "next_steps": ["risk_assessment"]
+        },
+        {
+          "step_id": "risk_assessment",
+          "title": "AI Risk Assessment",
+          "description": "Automated risk analysis of contract terms",
+          "instructions": "Review AI-generated risk assessment and recommendations",
+          "screenshot": "/static/images/risk_assessment.png",
+          "validation_criteria": ["Risk assessment completed"],
+          "ai_hints": ["Address high-risk items first", "Consider insurance for major risks"],
+          "next_steps": ["approval_workflow"]
+        },
+        {
+          "step_id": "approval_workflow",
+          "title": "Submit for Approval",
+          "description": "Route contract through approval workflow",
+          "instructions": "Submit contract to appropriate approvers based on value and risk",
+          "screenshot": "/static/images/contract_approval.png",
+          "validation_criteria": ["Approval workflow initiated"],
+          "ai_hints": ["Higher values require senior approval", "Legal review for custom terms"],
+          "next_steps": ["finalize_contract"]
+        },
+        {
+          "step_id": "finalize_contract",
+          "title": "Finalize and Execute",
+          "description": "Complete contract execution and setup monitoring",
+          "instructions": "Generate final contract, collect signatures, and setup renewal alerts",
+          "screenshot": "/static/images/finalize_contract.png",
+          "validation_criteria": ["Contract executed", "Monitoring setup"],
+          "ai_hints": ["Digital signatures preferred", "Set renewal reminder 90 days before expiry"],
+          "next_steps": []
+        }
+      ]
+    },
+    "supplier_performance": {
+      "title": "Supplier Performance Evaluation",
+      "description": "Evaluate and rate supplier performance",
+      "category": "supplier_management",
+      "difficulty": "intermediate",
+      "estimated_time": "15-20 minutes",
+      "ai_features": {
+        "performance_analytics": true,
+        "predictive_scoring": true,
+        "benchmark_comparison": true,
+        "recommendation_engine": true
+      },
+      "prerequisites": [
+        "Completed transactions with supplier",
+        "Performance data available",
+        "Evaluation criteria defined"
+      ],
+      "steps": [
+        {
+          "step_id": "select_supplier",
+          "title": "Select Supplier for Evaluation",
+          "description": "Choose supplier to evaluate from active supplier list",
+          "instructions": "Search and select supplier using name or ID",
+          "screenshot": "/static/images/select_supplier_eval.png",
+          "validation_criteria": ["Supplier selected"],
+          "ai_hints": ["AI highlights suppliers due for evaluation", "Focus on high-spend suppliers first"],
+          "next_steps": ["review_metrics"]
+        },
+        {
+          "step_id": "review_metrics",
+          "title": "Review Performance Metrics",
+          "description": "Analyze supplier performance across key metrics",
+          "instructions": "Review delivery performance, quality scores, and financial metrics",
+          "screenshot": "/static/images/performance_metrics.png",
+          "validation_criteria": ["Metrics reviewed"],
+          "ai_hints": ["AI calculates trends automatically", "Red indicators need immediate attention"],
+          "next_steps": ["quality_assessment"]
+        },
+        {
+          "step_id": "quality_assessment",
+          "title": "Quality Assessment",
+          "description": "Evaluate quality of goods and services delivered",
+          "instructions": "Rate quality aspects and record any quality issues",
+          "screenshot": "/static/images/quality_assessment.png",
+          "validation_criteria": ["Quality assessment completed"],
+          "ai_hints": ["Include feedback from end users", "Document quality improvements over time"],
+          "next_steps": ["financial_evaluation"]
+        },
+        {
+          "step_id": "financial_evaluation",
+          "title": "Financial Performance",
+          "description": "Assess financial aspects of supplier relationship",
+          "instructions": "Review pricing competitiveness and payment compliance",
+          "screenshot": "/static/images/financial_evaluation.png",
+          "validation_criteria": ["Financial evaluation completed"],
+          "ai_hints": ["AI compares with market benchmarks", "Consider total cost of ownership"],
+          "next_steps": ["generate_scorecard"]
+        },
+        {
+          "step_id": "generate_scorecard",
+          "title": "Generate Scorecard",
+          "description": "Create comprehensive supplier scorecard",
+          "instructions": "Review AI-generated scorecard and add comments",
+          "screenshot": "/static/images/supplier_scorecard.png",
+          "validation_criteria": ["Scorecard generated"],
+          "ai_hints": ["Share scorecard with supplier", "Use for renewal decisions"],
+          "next_steps": []
+        }
+      ]
+    },
+    "budget_tracking": {
+      "title": "Budget Management and Tracking",
+      "description": "Monitor and manage departmental budgets",
+      "category": "financial",
+      "difficulty": "intermediate",
+      "estimated_time": "10-15 minutes",
+      "ai_features": {
+        "spending_analytics": true,
+        "budget_forecasting": true,
+        "alert_system": true,
+        "optimization_suggestions": true
+      },
+      "prerequisites": [
+        "Budget allocation defined",
+        "Spending categories setup",
+        "Access to financial reports"
+      ],
+      "steps": [
+        {
+          "step_id": "access_budget",
+          "title": "Access Budget Dashboard",
+          "description": "Navigate to budget management dashboard",
+          "instructions": "Go to Financial > Budget Management from main menu",
+          "screenshot": "/static/images/budget_dashboard.png",
+          "validation_criteria": ["Budget dashboard loaded"],
+          "ai_hints": ["AI highlights budget variances", "Use filters for specific periods"],
+          "next_steps": ["analyze_spending"]
+        },
+        {
+          "step_id": "analyze_spending",
+          "title": "Analyze Spending Patterns",
+          "description": "Review current spending against budget allocations",
+          "instructions": "Examine spending by category, department, and time period",
+          "screenshot": "/static/images/spending_analysis.png",
+          "validation_criteria": ["Spending analysis completed"],
+          "ai_hints": ["AI identifies unusual spending patterns", "Drill down into high-variance items"],
+          "next_steps": ["forecast_budget"]
+        },
+        {
+          "step_id": "forecast_budget",
+          "title": "Budget Forecasting",
+          "description": "Use AI to forecast budget needs and spending",
+          "instructions": "Review AI-generated forecasts and adjust parameters",
+          "screenshot": "/static/images/budget_forecast.png",
+          "validation_criteria": ["Forecast generated"],
+          "ai_hints": ["Seasonal patterns considered", "Include planned initiatives in forecast"],
+          "next_steps": ["setup_alerts"]
+        },
+        {
+          "step_id": "setup_alerts",
+          "title": "Configure Budget Alerts",
+          "description": "Setup automated alerts for budget thresholds",
+          "instructions": "Define alert thresholds and notification preferences",
+          "screenshot": "/static/images/budget_alerts.png",
+          "validation_criteria": ["Alerts configured"],
+          "ai_hints": ["Set alerts at 80% and 95% of budget", "Include key stakeholders in notifications"],
+          "next_steps": []
+        }
+      ]
+    },
+    "catalog_management": {
+      "title": "Product Catalog Management",
+      "description": "Manage product catalogs and pricing",
+      "category": "catalog_management",
+      "difficulty": "advanced",
+      "estimated_time": "25-35 minutes",
+      "ai_features": {
+        "price_optimization": true,
+        "product_matching": true,
+        "catalog_intelligence": true,
+        "demand_forecasting": true
+      },
+      "prerequisites": [
+        "Product information and specifications",
+        "Pricing data",
+        "Supplier agreements"
+      ],
+      "steps": [
+        {
+          "step_id": "access_catalog",
+          "title": "Access Catalog Management",
+          "description": "Navigate to product catalog management section",
+          "instructions": "Go to Procurement > Catalog Management",
+          "screenshot": "/static/images/catalog_management.png",
+          "validation_criteria": ["Catalog management loaded"],
+          "ai_hints": ["AI suggests catalog optimizations", "Use bulk operations for efficiency"],
+          "next_steps": ["product_setup"]
+        },
+        {
+          "step_id": "product_setup",
+          "title": "Product Setup and Classification",
+          "description": "Add or modify product information and categories",
+          "instructions": "Enter product details, specifications, and assign categories",
+          "screenshot": "/static/images/product_setup.png",
+          "validation_criteria": ["Product information complete"],
+          "ai_hints": ["AI suggests product categories", "Use standard descriptions for consistency"],
+          "next_steps": ["pricing_strategy"]
+        },
+        {
+          "step_id": "pricing_strategy",
+          "title": "AI-Powered Pricing",
+          "description": "Set competitive pricing using AI recommendations",
+          "instructions": "Review AI pricing suggestions and set final prices",
+          "screenshot": "/static/images/ai_pricing.png",
+          "validation_criteria": ["Pricing strategy defined"],
+          "ai_hints": ["AI considers market rates and supplier costs", "Test different pricing scenarios"],
+          "next_steps": ["supplier_mapping"]
+        },
+        {
+          "step_id": "supplier_mapping",
+          "title": "Supplier Mapping",
+          "description": "Map products to preferred suppliers",
+          "instructions": "Assign primary and alternate suppliers for each product",
+          "screenshot": "/static/images/supplier_mapping.png",
+          "validation_criteria": ["Supplier mapping completed"],
+          "ai_hints": ["AI recommends suppliers based on performance", "Always have backup suppliers"],
+          "next_steps": ["publish_catalog"]
+        },
+        {
+          "step_id": "publish_catalog",
+          "title": "Publish and Monitor",
+          "description": "Publish catalog and setup monitoring",
+          "instructions": "Publish updated catalog and configure monitoring alerts",
+          "screenshot": "/static/images/publish_catalog.png",
+          "validation_criteria": ["Catalog published successfully"],
+          "ai_hints": ["Monitor usage patterns", "Regular price reviews recommended"],
+          "next_steps": []
+        }
+      ]
+    }
+  },
+  "ai_features": {
+    "smart_validation": {
+      "description": "AI-powered form validation with intelligent error detection",
+      "capabilities": [
+        "Real-time field validation",
+        "Contextual error messages",
+        "Data format suggestions",
+        "Duplicate detection"
+      ]
+    },
+    "predictive_text": {
+      "description": "Intelligent text completion and suggestions",
+      "capabilities": [
+        "Auto-complete for common fields",
+        "Smart suggestions based on history",
+        "Context-aware predictions",
+        "Multi-language support"
+      ]
+    },
+    "document_scanner": {
+      "description": "AI-powered document scanning and data extraction",
+      "capabilities": [
+        "OCR text extraction",
+        "Document classification",
+        "Data field mapping",
+        "Quality validation"
+      ]
+    },
+    "barcode_scanner": {
+      "description": "Barcode and QR code scanning for quick data entry",
+      "capabilities": [
+        "Multiple barcode formats",
+        "Real-time scanning",
+        "Product lookup",
+        "Inventory tracking"
+      ]
+    },
+    "photo_capture": {
+      "description": "Image capture and analysis for documentation",
+      "capabilities": [
+        "High-quality image capture",
+        "Image annotation",
+        "Automatic tagging",
+        "Storage optimization"
+      ]
+    },
+    "contract_analyzer": {
+      "description": "AI analysis of contract terms and conditions",
+      "capabilities": [
+        "Risk assessment",
+        "Clause optimization",
+        "Compliance checking",
+        "Benchmark comparison"
+      ]
+    },
+    "performance_analytics": {
+      "description": "Advanced analytics for supplier performance",
+      "capabilities": [
+        "Trend analysis",
+        "Predictive scoring",
+        "Benchmark comparison",
+        "Risk prediction"
+      ]
+    },
+    "spending_analytics": {
+      "description": "AI-powered spending analysis and optimization",
+      "capabilities": [
+        "Pattern recognition",
+        "Anomaly detection",
+        "Cost optimization",
+        "Budget forecasting"
+      ]
+    },
+    "price_optimization": {
+      "description": "Dynamic pricing optimization using market intelligence",
+      "capabilities": [
+        "Market price monitoring",
+        "Competitive analysis",
+        "Demand forecasting",
+        "Margin optimization"
+      ]
+    },
+    "smart_search": {
+      "description": "Intelligent search with natural language processing",
+      "capabilities": [
+        "Natural language queries",
+        "Fuzzy matching",
+        "Context understanding",
+        "Result ranking"
+      ]
+    }
+  },
+  "oracle_modules": {
+    "purchase_orders": {
+      "description": "Advanced purchase order management",
+      "available_queries": [
+        "search_by_po_number",
+        "search_by_supplier",
+        "search_by_date_range",
+        "search_by_category",
+        "search_by_status",
+        "search_by_amount_range",
+        "view_po_details",
+        "check_po_status",
+        "track_po_lifecycle",
+        "analyze_po_patterns"
+      ],
+      "ai_features": [
+        "Smart PO matching",
+        "Spend analysis",
+        "Supplier recommendations",
+        "Delivery predictions"
+      ]
+    },
+    "invoices": {
+      "description": "Comprehensive invoice management",
+      "available_queries": [
+        "search_invoices",
+        "view_invoice_status",
+        "track_payment_status",
+        "view_invoice_history",
+        "analyze_invoice_patterns",
+        "detect_duplicate_invoices",
+        "validate_invoice_data",
+        "forecast_cash_flow"
+      ],
+      "ai_features": [
+        "Invoice matching",
+        "Fraud detection",
+        "Payment prediction",
+        "Cash flow forecasting"
+      ]
+    },
+    "suppliers": {
+      "description": "Advanced supplier relationship management",
+      "available_queries": [
+        "search_suppliers",
+        "view_supplier_details",
+        "check_supplier_status",
+        "view_supplier_performance",
+        "analyze_supplier_risks",
+        "benchmark_suppliers",
+        "track_supplier_certifications",
+        "monitor_supplier_compliance"
+      ],
+      "ai_features": [
+        "Performance prediction",
+        "Risk assessment",
+        "Supplier discovery",
+        "Relationship optimization"
+      ]
+    },
+    "contracts": {
+      "description": "Contract lifecycle management",
+      "available_queries": [
+        "search_contracts",
+        "view_contract_status",
+        "track_renewals",
+        "analyze_contract_terms",
+        "monitor_compliance",
+        "calculate_savings",
+        "risk_assessment",
+        "performance_tracking"
+      ],
+      "ai_features": [
+        "Contract analysis",
+        "Risk prediction",
+        "Renewal optimization",
+        "Compliance monitoring"
+      ]
+    },
+    "budgets": {
+      "description": "Budget planning and tracking",
+      "available_queries": [
+        "view_budget_status",
+        "analyze_spending",
+        "forecast_budget",
+        "track_variances",
+        "monitor_allocations",
+        "calculate_projections",
+        "identify_savings",
+        "benchmark_costs"
+      ],
+      "ai_features": [
+        "Spend prediction",
+        "Budget optimization",
+        "Anomaly detection",
+        "Scenario planning"
+      ]
+    },
+    "catalog": {
+      "description": "Product catalog and pricing management",
+      "available_queries": [
+        "search_products",
+        "compare_prices",
+        "analyze_demand",
+        "track_usage",
+        "monitor_availability",
+        "optimize_inventory",
+        "benchmark_pricing",
+        "forecast_demand"
+      ],
+      "ai_features": [
+        "Price optimization",
+        "Demand forecasting",
+        "Product matching",
+        "Inventory optimization"
+      ]
+    }
+  },
+  "validation_rules": {
+    "work_confirmation": {
+      "quantity_must_not_exceed_po": true,
+      "completion_date_required": true,
+      "po_must_be_active": true,
+      "ai_validation": {
+        "smart_quantity_check": true,
+        "date_reasonableness": true,
+        "pattern_analysis": true
+      }
+    },
+    "invoice_submission": {
+      "po_or_receipt_required": true,
+      "amount_must_match_po": true,
+      "invoice_number_unique": true,
+      "ai_validation": {
+        "duplicate_detection": true,
+        "amount_variance_check": true,
+        "supplier_validation": true
+      }
+    },
+    "supplier_registration": {
+      "required_documents": ["business_license", "tax_certificate", "bank_certificate"],
+      "minimum_info_required": true,
+      "compliance_check": true,
+      "ai_validation": {
+        "document_verification": true,
+        "risk_assessment": true,
+        "compliance_scoring": true
+      }
+    },
+    "contract_management": {
+      "terms_completeness": true,
+      "legal_review_required": true,
+      "approval_workflow": true,
+      "ai_validation": {
+        "risk_analysis": true,
+        "clause_optimization": true,
+        "compliance_check": true
+      }
+    }
+  },
+  "notification_rules": {
+    "smart_alerts": {
+      "budget_thresholds": [80, 95],
+      "contract_renewal_days": 90,
+      "payment_due_days": 7,
+      "supplier_performance_review": 30
+    },
+    "ai_notifications": {
+      "anomaly_detection": true,
+      "predictive_alerts": true,
+      "personalized_recommendations": true,
+      "smart_prioritization": true
+    }
+  }
+}
