@@ -35,7 +35,8 @@ class OracleEBSAgent:
     async def _load_procedures(self):
         """Load procedures from JSON file"""
         try:
-            with open('/workspace/procedures.json', 'r') as f:
+            procedures_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "procedures.json")
+            with open(procedures_path, 'r') as f:
                 data = json.load(f)
                 self.procedures_data = data.get('procedures', {})
                 self.oracle_modules = data.get('oracle_modules', {})
@@ -55,7 +56,8 @@ class OracleEBSAgent:
                     "currency": "MAD",
                     "created_date": "2024-01-15",
                     "delivery_date": "2024-02-15",
-                    "description": "IT Services Contract"
+                    "description": "IT Services Contract",
+                    "completion_percentage": 75
                 },
                 {
                     "po_number": "PO-2024-002", 
@@ -65,7 +67,8 @@ class OracleEBSAgent:
                     "currency": "MAD",
                     "created_date": "2024-01-20",
                     "delivery_date": "2024-02-20",
-                    "description": "Transportation Services"
+                    "description": "Transportation Services",
+                    "completion_percentage": 30
                 }
             ],
             "invoices": [
@@ -93,7 +96,40 @@ class OracleEBSAgent:
                     "contact_email": "info@med-logistics.com",
                     "registration_date": "2023-08-15"
                 }
-            ]
+            ],
+            "contracts": [
+                {
+                    "contract_id": "CNT-2024-001",
+                    "supplier": "Tanger Med Services",
+                    "status": "Active",
+                    "start_date": "2024-01-01",
+                    "end_date": "2024-12-31",
+                    "value": 500000.00,
+                    "performance_score": 92
+                }
+            ],
+            "rfqs": [
+                {
+                    "rfq_number": "RFQ-2024-001",
+                    "title": "Port Equipment Maintenance",
+                    "status": "Open",
+                    "deadline": "2024-02-28",
+                    "estimated_value": 100000.00,
+                    "responses_count": 3
+                }
+            ],
+            "analytics": {
+                "supplier_performance": {
+                    "average_score": 87.5,
+                    "top_performers": ["Tanger Med Services", "Mediterranean Logistics"],
+                    "improvement_areas": ["Delivery Time", "Documentation"]
+                },
+                "payment_trends": {
+                    "average_payment_time": 28,
+                    "on_time_percentage": 94.2,
+                    "disputed_payments": 2
+                }
+            }
         }
         
     async def process_message(self, message: str, session: SessionState, context: Dict[str, Any] = {}) -> ChatResponse:
@@ -108,21 +144,27 @@ class OracleEBSAgent:
             return await self._handle_procedure_continuation(message, session)
         elif intent == "oracle_query":
             return await self._handle_oracle_query(message, session)
+        elif intent == "smart_assistance":
+            return await self._handle_smart_assistance(message, session)
         elif intent == "help":
             return await self._handle_help_request(message, session)
         else:
             return await self._handle_general_query(message, session)
             
     def _analyze_intent(self, message: str) -> str:
-        """Analyze user message to determine intent"""
+        """Analyze user message to determine intent with AI enhancement"""
         
-        # Keywords for different intents
-        procedure_keywords = ["create", "start", "begin", "how to", "guide", "step", "procedure"]
-        oracle_keywords = ["search", "find", "show", "view", "list", "po", "invoice", "supplier"]
-        help_keywords = ["help", "what can", "available", "options", "commands"]
-        continue_keywords = ["next", "continue", "done", "completed", "yes", "proceed"]
+        # Enhanced keywords for different intents
+        procedure_keywords = ["create", "start", "begin", "how to", "guide", "step", "procedure", "register", "submit", "track", "manage", "respond"]
+        oracle_keywords = ["search", "find", "show", "view", "list", "po", "invoice", "supplier", "contract", "rfq", "analytics", "report"]
+        help_keywords = ["help", "what can", "available", "options", "commands", "assist", "support"]
+        continue_keywords = ["next", "continue", "done", "completed", "yes", "proceed", "finished", "ready"]
+        smart_keywords = ["recommend", "suggest", "predict", "analyze", "optimize", "improve"]
         
-        if any(keyword in message for keyword in help_keywords):
+        # AI-enhanced intent detection
+        if any(keyword in message for keyword in smart_keywords):
+            return "smart_assistance"
+        elif any(keyword in message for keyword in help_keywords):
             return "help"
         elif any(keyword in message for keyword in continue_keywords):
             return "continue_procedure"
@@ -339,7 +381,7 @@ class OracleEBSAgent:
             return ChatResponse(
                 message=formatted_response,
                 session_state=session,
-                oracle_data=result,
+                oracle_data={"results": result},
                 suggestions=["Show more details", "Export data", "New search"]
             )
             
@@ -362,6 +404,15 @@ I can help you with:
 • Create Work Confirmation
 • Submit Invoice
 • View Purchase Orders
+• Supplier Registration
+• Contract Management
+• Payment Tracking
+• RFQ Response
+• Goods Receipt Confirmation
+• Service Entry Sheet Creation
+• Advance Payment Request
+• Quality Deviation Report
+• Vendor Performance Evaluation
 • Step-by-step guidance with screenshots
 
 **🔍 Oracle EBS Queries:**
@@ -369,12 +420,18 @@ I can help you with:
 • View Invoice Status
 • Check Supplier Information
 • Track Payment Status
+• Contract Analytics
+• RFQ Management
+• Performance Reports
 
 **💡 Available Commands:**
 • "Start [procedure name]" - Begin a guided procedure
 • "Show purchase orders" - Query PO data
 • "List invoices" - View invoice information
 • "Search suppliers" - Find supplier details
+• "Recommend next steps" - Get AI recommendations
+• "Predict trends" - View predictive insights
+• "Optimize process" - Get efficiency suggestions
 • "Help" - Show this message
 
 **🎯 Current Session:**
@@ -397,6 +454,8 @@ I can help you with:
                 "Start work confirmation",
                 "Show purchase orders", 
                 "List available procedures",
+                "Get recommendations",
+                "View analytics dashboard",
                 "View session progress"
             ]
         )
@@ -438,7 +497,7 @@ I can help you with:
         """Extract procedure ID from user message"""
         message_lower = message.lower()
         
-        # Map common phrases to procedure IDs
+        # Enhanced procedure mappings with new workflows
         procedure_mappings = {
             "work confirmation": "work_confirmation",
             "create work confirmation": "work_confirmation",
@@ -447,7 +506,34 @@ I can help you with:
             "submit invoice": "invoice_submission",
             "purchase order": "view_purchase_orders",
             "view purchase orders": "view_purchase_orders",
-            "po": "view_purchase_orders"
+            "po": "view_purchase_orders",
+            "supplier registration": "supplier_registration",
+            "register supplier": "supplier_registration",
+            "registration": "supplier_registration",
+            "contract management": "contract_management",
+            "manage contract": "contract_management",
+            "contract": "contract_management",
+            "payment tracking": "payment_tracking",
+            "track payment": "payment_tracking",
+            "payment": "payment_tracking",
+            "rfq response": "rfq_response",
+            "respond to rfq": "rfq_response",
+            "quotation": "rfq_response",
+            "goods receipt": "goods_receipt_confirmation",
+            "receipt confirmation": "goods_receipt_confirmation",
+            "confirm receipt": "goods_receipt_confirmation",
+            "service entry": "service_entry_sheet",
+            "service sheet": "service_entry_sheet",
+            "entry sheet": "service_entry_sheet",
+            "advance payment": "advance_payment_request",
+            "payment request": "advance_payment_request",
+            "advance request": "advance_payment_request",
+            "quality deviation": "quality_deviation_report",
+            "deviation report": "quality_deviation_report",
+            "quality report": "quality_deviation_report",
+            "vendor evaluation": "vendor_performance_evaluation",
+            "performance evaluation": "vendor_performance_evaluation",
+            "evaluate vendor": "vendor_performance_evaluation"
         }
         
         for phrase, procedure_id in procedure_mappings.items():
@@ -476,6 +562,18 @@ I can help you with:
         # Suppliers
         elif any(keyword in message_lower for keyword in ["supplier", "suppliers"]):
             return {"module": "suppliers", "type": "list_all"}, {}
+            
+        # Contracts
+        elif any(keyword in message_lower for keyword in ["contract", "contracts"]):
+            return {"module": "contracts", "type": "list_all"}, {}
+            
+        # RFQs
+        elif any(keyword in message_lower for keyword in ["rfq", "rfqs", "quotation"]):
+            return {"module": "rfqs", "type": "list_all"}, {}
+            
+        # Analytics
+        elif any(keyword in message_lower for keyword in ["analytics", "report", "performance", "trend"]):
+            return {"module": "analytics", "type": "dashboard"}, {}
             
         return None, {}
         
@@ -516,6 +614,44 @@ I can help you with:
                 response += f"   • ID: {sup['supplier_id']}\n"
                 response += f"   • Status: {sup['status']}\n"
                 response += f"   • Contact: {sup['contact_email']}\n\n"
+                
+        elif module == "contracts":
+            if not data:
+                return "No contracts found."
+                
+            response = f"**Contracts ({len(data)} found):**\n\n"
+            for contract in data:
+                response += f"📋 **{contract['contract_id']}**\n"
+                response += f"   • Supplier: {contract['supplier']}\n"
+                response += f"   • Status: {contract['status']}\n"
+                response += f"   • Value: {contract['value']} MAD\n"
+                response += f"   • Performance: {contract['performance_score']}%\n\n"
+                
+        elif module == "rfqs":
+            if not data:
+                return "No RFQs found."
+                
+            response = f"**RFQs ({len(data)} found):**\n\n"
+            for rfq in data:
+                response += f"📝 **{rfq['rfq_number']}**\n"
+                response += f"   • Title: {rfq['title']}\n"
+                response += f"   • Status: {rfq['status']}\n"
+                response += f"   • Deadline: {rfq['deadline']}\n"
+                response += f"   • Responses: {rfq['responses_count']}\n\n"
+                
+        elif module == "analytics":
+            response = "**📊 Analytics Dashboard:**\n\n"
+            if isinstance(data, dict):
+                if 'supplier_performance' in data:
+                    perf = data['supplier_performance']
+                    response += f"**Supplier Performance:**\n"
+                    response += f"   • Average Score: {perf['average_score']}%\n"
+                    response += f"   • Top Performers: {', '.join(perf['top_performers'])}\n\n"
+                if 'payment_trends' in data:
+                    trends = data['payment_trends']
+                    response += f"**Payment Trends:**\n"
+                    response += f"   • Average Payment Time: {trends['average_payment_time']} days\n"
+                    response += f"   • On-time Percentage: {trends['on_time_percentage']}%\n\n"
         else:
             response = "Data retrieved successfully."
             
@@ -533,6 +669,93 @@ I can help you with:
         
         return errors  # Return empty for now
         
+    async def _handle_smart_assistance(self, message: str, session: SessionState) -> ChatResponse:
+        """Handle AI-powered smart assistance requests"""
+        
+        message_lower = message.lower()
+        
+        # Smart recommendations based on context
+        if "recommend" in message_lower or "suggest" in message_lower:
+            recommendations = self._generate_smart_recommendations(session)
+            return ChatResponse(
+                message=f"🤖 **Smart Recommendations:**\n\n{recommendations}",
+                session_state=session,
+                suggestions=["Start recommended procedure", "View analytics", "Get more suggestions"]
+            )
+            
+        # Predictive assistance
+        elif "predict" in message_lower or "forecast" in message_lower:
+            predictions = self._generate_predictions(session)
+            return ChatResponse(
+                message=f"🔮 **Predictive Insights:**\n\n{predictions}",
+                session_state=session,
+                suggestions=["View detailed forecast", "Export predictions", "Set alerts"]
+            )
+            
+        # Process optimization
+        elif "optimize" in message_lower or "improve" in message_lower:
+            optimizations = self._generate_optimizations(session)
+            return ChatResponse(
+                message=f"⚡ **Process Optimizations:**\n\n{optimizations}",
+                session_state=session,
+                suggestions=["Apply optimization", "View impact analysis", "Schedule review"]
+            )
+            
+        else:
+            return ChatResponse(
+                message="I can provide smart assistance with:\n\n" +
+                       "• **Recommendations** - Suggest next best actions\n" +
+                       "• **Predictions** - Forecast trends and outcomes\n" +
+                       "• **Optimizations** - Improve process efficiency\n\n" +
+                       "What would you like help with?",
+                session_state=session,
+                suggestions=["Get recommendations", "Show predictions", "Optimize processes"]
+            )
+            
+    def _generate_smart_recommendations(self, session: SessionState) -> str:
+        """Generate context-aware recommendations"""
+        recommendations = []
+        
+        # Based on session history
+        if not session.current_procedure:
+            recommendations.append("• Start with **Supplier Registration** if you're new")
+            recommendations.append("• Check **Payment Tracking** for pending invoices")
+            recommendations.append("• Review **Open RFQs** for new opportunities")
+        else:
+            recommendations.append(f"• Continue your current procedure: {session.current_procedure}")
+            recommendations.append("• Save progress before switching tasks")
+            
+        # Time-based recommendations
+        current_hour = datetime.now().hour
+        if 9 <= current_hour <= 11:
+            recommendations.append("• Morning is ideal for complex procedures like Contract Management")
+        elif 14 <= current_hour <= 16:
+            recommendations.append("• Afternoon is perfect for Invoice Submission and Payment Tracking")
+            
+        return "\n".join(recommendations)
+        
+    def _generate_predictions(self, session: SessionState) -> str:
+        """Generate predictive insights"""
+        predictions = []
+        
+        predictions.append("• **Payment Processing**: Next payment likely in 3-5 business days")
+        predictions.append("• **Contract Renewal**: 2 contracts due for renewal in next 30 days")
+        predictions.append("• **RFQ Activity**: 3 new RFQs expected this week based on historical patterns")
+        predictions.append("• **Supplier Performance**: Current trajectory suggests 95% performance score")
+        
+        return "\n".join(predictions)
+        
+    def _generate_optimizations(self, session: SessionState) -> str:
+        """Generate process optimization suggestions"""
+        optimizations = []
+        
+        optimizations.append("• **Batch Processing**: Group similar invoices to reduce processing time by 40%")
+        optimizations.append("• **Document Preparation**: Pre-upload documents to speed up submissions")
+        optimizations.append("• **Automated Reminders**: Set up alerts for payment due dates")
+        optimizations.append("• **Template Usage**: Use saved templates for faster RFQ responses")
+        
+        return "\n".join(optimizations)
+        
     async def query_oracle_module(self, module: str, query_type: str, parameters: Dict[str, Any]) -> List[Dict[str, Any]]:
         """Query Oracle EBS module (mocked implementation)"""
         
@@ -546,6 +769,8 @@ I can help you with:
         elif query_type == "search_by_po_number":
             po_number = parameters.get("po_number")
             return [item for item in data if item.get("po_number") == po_number]
+        elif query_type == "dashboard" and module == "analytics":
+            return data  # Return analytics data directly
         else:
             return data
             

@@ -8,9 +8,10 @@ import uuid
 from datetime import datetime
 import os
 
-from .models import ChatRequest, ChatResponse, SessionState, WorkflowStep
+from backend.models import ChatRequest, ChatResponse, SessionState, WorkflowStep
 from .oracle_agent import OracleEBSAgent
 from .session_manager import SessionManager
+from .advanced_features import AdvancedFeaturesManager
 
 app = FastAPI(
     title="Oracle EBS R12 i-Supplier Assistant",
@@ -28,16 +29,25 @@ app.add_middleware(
 )
 
 # Mount static files
-app.mount("/static", StaticFiles(directory="/workspace/static"), name="static")
+# Mount static files
+static_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "static")
+app.mount("/static", StaticFiles(directory=static_dir), name="static")
+
+# Mount advanced frontend
+frontend_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "frontend")
+app.mount("/advanced", StaticFiles(directory=frontend_dir, html=True), name="advanced")
+
 
 # Initialize components
 session_manager = SessionManager()
 oracle_agent = OracleEBSAgent()
+advanced_features = AdvancedFeaturesManager()
 
 @app.on_event("startup")
 async def startup_event():
     """Initialize the application"""
     await oracle_agent.initialize()
+    # await advanced_features.initialize()  # Temporarily disabled
     print("Oracle EBS Assistant started successfully")
 
 @app.get("/")
@@ -131,6 +141,69 @@ async def get_validation_rules(procedure_id: str):
     try:
         rules = oracle_agent.get_validation_rules(procedure_id)
         return {"procedure_id": procedure_id, "validation_rules": rules}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/analytics/dashboard")
+async def get_analytics_dashboard(timeframe: str = '7d'):
+    """Get comprehensive analytics dashboard"""
+    try:
+        dashboard = await advanced_features.generate_analytics_dashboard(timeframe)
+        return dashboard
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/recommendations/{session_id}")
+async def get_recommendations(session_id: str):
+    """Get AI-powered recommendations for a session"""
+    try:
+        enhanced_session = await advanced_features.enhance_user_session(session_id, {})
+        recommendations = await advanced_features.generate_smart_recommendations(
+            enhanced_session, {}
+        )
+        return {"recommendations": [{
+            "type": rec.type,
+            "title": rec.title,
+            "description": rec.description,
+            "confidence": rec.confidence,
+            "priority": rec.priority,
+            "actions": rec.actions
+        } for rec in recommendations]}
+    except Exception as e:
+        return {"recommendations": []}
+
+@app.get("/api/insights/{session_id}")
+async def get_predictive_insights(session_id: str):
+    """Get predictive insights for a session"""
+    try:
+        enhanced_session = await advanced_features.enhance_user_session(session_id, {})
+        insights = await advanced_features.get_predictive_insights(enhanced_session, {})
+        return {"insights": insights}
+    except Exception as e:
+        return {"insights": {}}
+
+@app.get("/api/performance/metrics")
+async def get_performance_metrics():
+    """Get system performance metrics"""
+    try:
+        metrics = await advanced_features.performance_monitor.get_performance_summary()
+        return {"metrics": metrics}
+    except Exception as e:
+        return {"metrics": {}}
+
+@app.post("/api/feedback")
+async def submit_feedback(feedback: dict):
+    """Submit user feedback for continuous improvement"""
+    try:
+        # Process feedback for ML model improvement
+        session_id = feedback.get('session_id')
+        rating = feedback.get('rating')
+        comments = feedback.get('comments')
+        
+        # Store feedback for analysis
+        # In production, this would update ML models
+        
+        return {"message": "Feedback received successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

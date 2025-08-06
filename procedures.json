@@ -168,6 +168,535 @@
           "next_steps": []
         }
       ]
+    },
+    "supplier_registration": {
+      "title": "Supplier Registration",
+      "description": "Complete supplier onboarding and registration process",
+      "category": "supplier_management",
+      "prerequisites": [
+        "Valid business registration documents",
+        "Tax identification numbers",
+        "Banking information"
+      ],
+      "steps": [
+        {
+          "step_id": "initial_application",
+          "title": "Submit Initial Application",
+          "description": "Complete the supplier registration form with basic company information",
+          "instructions": "Fill in company name, address, contact details, and business type",
+          "screenshot": "/static/images/supplier_registration.png",
+          "validation_criteria": ["All mandatory fields completed", "Valid email format"],
+          "next_steps": ["document_upload"]
+        },
+        {
+          "step_id": "document_upload",
+          "title": "Upload Required Documents",
+          "description": "Upload all necessary business and compliance documents",
+          "instructions": "Upload business license, tax certificates, and banking details",
+          "screenshot": "/static/images/document_upload.png",
+          "validation_criteria": ["All required documents uploaded", "File formats accepted"],
+          "next_steps": ["compliance_check"]
+        },
+        {
+          "step_id": "compliance_check",
+          "title": "Compliance Verification",
+          "description": "Complete compliance questionnaire and certifications",
+          "instructions": "Answer compliance questions and upload certifications",
+          "screenshot": "/static/images/compliance_check.png",
+          "validation_criteria": ["Compliance form completed", "Certifications valid"],
+          "next_steps": ["approval_process"]
+        },
+        {
+          "step_id": "approval_process",
+          "title": "Await Approval",
+          "description": "Monitor application status and respond to any queries",
+          "instructions": "Check application status regularly and respond to procurement team queries",
+          "screenshot": "/static/images/approval_status.png",
+          "validation_criteria": ["Application submitted for review"],
+          "next_steps": []
+        }
+      ]
+    },
+    "contract_management": {
+      "title": "Contract Management",
+      "description": "Manage contracts, amendments, and renewals",
+      "category": "contract_management",
+      "prerequisites": [
+        "Active supplier status",
+        "Contract documents ready"
+      ],
+      "steps": [
+        {
+          "step_id": "contract_review",
+          "title": "Review Contract Terms",
+          "description": "Review and understand contract terms and conditions",
+          "instructions": "Carefully read all contract clauses, payment terms, and deliverables",
+          "screenshot": "/static/images/contract_review.png",
+          "validation_criteria": ["Contract terms reviewed", "Questions clarified"],
+          "next_steps": ["contract_acceptance"]
+        },
+        {
+          "step_id": "contract_acceptance",
+          "title": "Accept Contract",
+          "description": "Digitally sign and accept the contract",
+          "instructions": "Use digital signature to accept contract terms",
+          "screenshot": "/static/images/contract_signature.png",
+          "validation_criteria": ["Contract digitally signed", "Acceptance confirmed"],
+          "next_steps": ["performance_tracking"]
+        },
+        {
+          "step_id": "performance_tracking",
+          "title": "Track Performance",
+          "description": "Monitor contract performance and milestones",
+          "instructions": "Regular updates on deliverables and milestone completion",
+          "screenshot": "/static/images/performance_tracking.png",
+          "validation_criteria": ["Performance metrics updated"],
+          "next_steps": []
+        }
+      ]
+    },
+    "payment_tracking": {
+      "title": "Payment Tracking",
+      "description": "Track invoice payments and resolve payment issues",
+      "category": "financial",
+      "prerequisites": [
+        "Submitted invoices",
+        "Valid payment terms"
+      ],
+      "steps": [
+        {
+          "step_id": "payment_status_check",
+          "title": "Check Payment Status",
+          "description": "Review current payment status for all invoices",
+          "instructions": "Navigate to payment tracking and review invoice status",
+          "screenshot": "/static/images/payment_status.png",
+          "validation_criteria": ["Payment status reviewed"],
+          "next_steps": ["dispute_resolution"]
+        },
+        {
+          "step_id": "dispute_resolution",
+          "title": "Resolve Payment Disputes",
+          "description": "Address any payment discrepancies or delays",
+          "instructions": "Contact procurement team for payment issues and provide documentation",
+          "screenshot": "/static/images/dispute_resolution.png",
+          "validation_criteria": ["Dispute documented", "Resolution initiated"],
+          "next_steps": []
+        }
+      ]
+    },
+    "rfq_response": {
+      "title": "RFQ Response",
+      "description": "Respond to Request for Quotation (RFQ) from Tanger Med",
+      "category": "procurement",
+      "prerequisites": [
+        "RFQ notification received",
+        "Technical specifications understood",
+        "Pricing information ready"
+      ],
+      "steps": [
+        {
+          "step_id": "rfq_review",
+          "title": "Review RFQ Requirements",
+          "description": "Analyze RFQ specifications and requirements",
+          "instructions": "Carefully review technical specs, delivery requirements, and evaluation criteria",
+          "screenshot": "/static/images/rfq_review.png",
+          "validation_criteria": ["Requirements understood", "Feasibility assessed"],
+          "next_steps": ["prepare_quotation"]
+        },
+        {
+          "step_id": "prepare_quotation",
+          "title": "Prepare Quotation",
+          "description": "Create detailed quotation with pricing and technical details",
+          "instructions": "Fill in pricing, delivery schedule, and technical compliance details",
+          "screenshot": "/static/images/quotation_prep.png",
+          "validation_criteria": ["Pricing completed", "Technical specs addressed"],
+          "next_steps": ["submit_quotation"]
+        },
+        {
+          "step_id": "submit_quotation",
+          "title": "Submit Quotation",
+          "description": "Submit the completed quotation before deadline",
+          "instructions": "Review all details and submit quotation through the portal",
+          "screenshot": "/static/images/quotation_submit.png",
+          "validation_criteria": ["Quotation submitted", "Confirmation received"],
+          "next_steps": []
+        }
+      ]
+    },
+    "goods_receipt_confirmation": {
+      "title": "Goods Receipt Confirmation",
+      "description": "Confirm receipt of goods and materials delivered to Tanger Med",
+      "category": "procurement",
+      "prerequisites": [
+        "Goods physically received",
+        "Delivery documentation available",
+        "Quality inspection completed"
+      ],
+      "steps": [
+        {
+          "step_id": "login_portal",
+          "title": "Access i-Supplier Portal",
+          "description": "Login to Oracle EBS i-Supplier portal",
+          "instructions": "Enter your credentials and access the supplier portal",
+          "screenshot": "/static/images/login_screen.png",
+          "validation_criteria": ["Successfully logged in", "Dashboard accessible"],
+          "next_steps": ["navigate_receipts"]
+        },
+        {
+          "step_id": "navigate_receipts",
+          "title": "Navigate to Receipts",
+          "description": "Access the goods receipt section",
+          "instructions": "Click on Procurement menu and select Goods Receipts",
+          "screenshot": "/static/images/navigate_receipts.png",
+          "validation_criteria": ["Receipts page loaded"],
+          "next_steps": ["search_delivery"]
+        },
+        {
+          "step_id": "search_delivery",
+          "title": "Search for Delivery",
+          "description": "Find the specific delivery to confirm",
+          "instructions": "Use PO number or delivery note to search for the shipment",
+          "screenshot": "/static/images/search_delivery.png",
+          "validation_criteria": ["Delivery found", "Details displayed"],
+          "next_steps": ["verify_quantities"]
+        },
+        {
+          "step_id": "verify_quantities",
+          "title": "Verify Received Quantities",
+          "description": "Confirm the actual quantities received",
+          "instructions": "Enter the actual quantities received for each line item",
+          "screenshot": "/static/images/verify_quantities.png",
+          "validation_criteria": ["Quantities entered", "Discrepancies noted"],
+          "next_steps": ["quality_inspection"]
+        },
+        {
+          "step_id": "quality_inspection",
+          "title": "Record Quality Inspection",
+          "description": "Document quality inspection results",
+          "instructions": "Record inspection results and any quality issues found",
+          "screenshot": "/static/images/quality_inspection.png",
+          "validation_criteria": ["Inspection completed", "Results documented"],
+          "next_steps": ["upload_documents"]
+        },
+        {
+          "step_id": "upload_documents",
+          "title": "Upload Supporting Documents",
+          "description": "Attach delivery notes and inspection reports",
+          "instructions": "Upload delivery note, packing list, and inspection certificate",
+          "screenshot": "/static/images/upload_documents.png",
+          "validation_criteria": ["Documents uploaded", "File formats valid"],
+          "next_steps": ["confirm_receipt"]
+        },
+        {
+          "step_id": "confirm_receipt",
+          "title": "Confirm Receipt",
+          "description": "Final confirmation of goods receipt",
+          "instructions": "Review all details and confirm the receipt",
+          "screenshot": "/static/images/confirm_receipt.png",
+          "validation_criteria": ["Receipt confirmed", "System updated"],
+          "next_steps": []
+        }
+      ]
+    },
+    "service_entry_sheet": {
+      "title": "Service Entry Sheet Creation",
+      "description": "Create service entry sheets for completed services",
+      "category": "procurement",
+      "prerequisites": [
+        "Service work completed",
+        "Service PO available",
+        "Performance documentation ready"
+      ],
+      "steps": [
+        {
+          "step_id": "portal_access",
+          "title": "Access Service Entry Module",
+          "description": "Navigate to service entry functionality",
+          "instructions": "Login and access the Service Entry Sheet module",
+          "screenshot": "/static/images/login_screen.png",
+          "validation_criteria": ["Module accessed", "Service POs visible"],
+          "next_steps": ["select_service_po"]
+        },
+        {
+          "step_id": "select_service_po",
+          "title": "Select Service Purchase Order",
+          "description": "Choose the relevant service PO",
+          "instructions": "Search and select the service purchase order",
+          "screenshot": "/static/images/select_service_po.png",
+          "validation_criteria": ["Service PO selected", "Service lines displayed"],
+          "next_steps": ["enter_service_details"]
+        },
+        {
+          "step_id": "enter_service_details",
+          "title": "Enter Service Performance Details",
+          "description": "Document the services performed",
+          "instructions": "Enter service quantities, dates, and performance metrics",
+          "screenshot": "/static/images/service_details.png",
+          "validation_criteria": ["Service details entered", "Quantities valid"],
+          "next_steps": ["attach_evidence"]
+        },
+        {
+          "step_id": "attach_evidence",
+          "title": "Attach Performance Evidence",
+          "description": "Upload proof of service completion",
+          "instructions": "Attach photos, reports, or certificates proving service completion",
+          "screenshot": "/static/images/attach_evidence.png",
+          "validation_criteria": ["Evidence uploaded", "Documentation complete"],
+          "next_steps": ["review_entry"]
+        },
+        {
+          "step_id": "review_entry",
+          "title": "Review Service Entry",
+          "description": "Verify all service entry information",
+          "instructions": "Review service details, quantities, and attached documentation",
+          "screenshot": "/static/images/review_entry.png",
+          "validation_criteria": ["Information verified", "Ready for submission"],
+          "next_steps": ["submit_entry"]
+        },
+        {
+          "step_id": "submit_entry",
+          "title": "Submit Service Entry Sheet",
+          "description": "Final submission of service entry",
+          "instructions": "Submit the service entry sheet for approval",
+          "screenshot": "/static/images/submit_entry.png",
+          "validation_criteria": ["Entry submitted", "Confirmation received"],
+          "next_steps": []
+        }
+      ]
+    },
+    "advance_payment_request": {
+      "title": "Advance Payment Request",
+      "description": "Request advance payment for large contracts or projects",
+      "category": "financial",
+      "prerequisites": [
+        "Valid contract with advance payment clause",
+        "Bank guarantee available",
+        "Project milestones defined"
+      ],
+      "steps": [
+        {
+          "step_id": "access_payment_module",
+          "title": "Access Payment Request Module",
+          "description": "Navigate to advance payment functionality",
+          "instructions": "Login and access the Advance Payment Request section",
+          "screenshot": "/static/images/login_screen.png",
+          "validation_criteria": ["Payment module accessed", "Contracts visible"],
+          "next_steps": ["select_contract"]
+        },
+        {
+          "step_id": "select_contract",
+          "title": "Select Contract for Advance",
+          "description": "Choose the contract requiring advance payment",
+          "instructions": "Search and select the contract eligible for advance payment",
+          "screenshot": "/static/images/select_contract.png",
+          "validation_criteria": ["Contract selected", "Advance terms visible"],
+          "next_steps": ["calculate_advance"]
+        },
+        {
+          "step_id": "calculate_advance",
+          "title": "Calculate Advance Amount",
+          "description": "Determine the advance payment amount",
+          "instructions": "Calculate advance based on contract terms and milestone completion",
+          "screenshot": "/static/images/calculate_advance.png",
+          "validation_criteria": ["Amount calculated", "Within contract limits"],
+          "next_steps": ["upload_guarantee"]
+        },
+        {
+          "step_id": "upload_guarantee",
+          "title": "Upload Bank Guarantee",
+          "description": "Attach required bank guarantee documents",
+          "instructions": "Upload valid bank guarantee covering the advance amount",
+          "screenshot": "/static/images/upload_guarantee.png",
+          "validation_criteria": ["Guarantee uploaded", "Validity confirmed"],
+          "next_steps": ["justify_request"]
+        },
+        {
+          "step_id": "justify_request",
+          "title": "Provide Justification",
+          "description": "Explain the need for advance payment",
+          "instructions": "Enter detailed justification for the advance payment request",
+          "screenshot": "/static/images/justify_request.png",
+          "validation_criteria": ["Justification provided", "Business case clear"],
+          "next_steps": ["submit_request"]
+        },
+        {
+          "step_id": "submit_request",
+          "title": "Submit Advance Request",
+          "description": "Final submission of advance payment request",
+          "instructions": "Review all details and submit the advance payment request",
+          "screenshot": "/static/images/submit_request.png",
+          "validation_criteria": ["Request submitted", "Reference number generated"],
+          "next_steps": []
+        }
+      ]
+    },
+    "quality_deviation_report": {
+      "title": "Quality Deviation Report",
+      "description": "Report quality issues and deviations in delivered goods or services",
+      "category": "quality_management",
+      "prerequisites": [
+        "Quality issue identified",
+        "Evidence documentation ready",
+        "Impact assessment completed"
+      ],
+      "steps": [
+        {
+          "step_id": "access_quality_module",
+          "title": "Access Quality Management",
+          "description": "Navigate to quality deviation reporting",
+          "instructions": "Login and access the Quality Management module",
+          "screenshot": "/static/images/login_screen.png",
+          "validation_criteria": ["Quality module accessed", "Reporting options visible"],
+          "next_steps": ["create_deviation_report"]
+        },
+        {
+          "step_id": "create_deviation_report",
+          "title": "Create New Deviation Report",
+          "description": "Initiate a new quality deviation report",
+          "instructions": "Click Create New Report and select deviation type",
+          "screenshot": "/static/images/create_deviation.png",
+          "validation_criteria": ["Report created", "Form opened"],
+          "next_steps": ["describe_deviation"]
+        },
+        {
+          "step_id": "describe_deviation",
+          "title": "Describe Quality Deviation",
+          "description": "Provide detailed description of the quality issue",
+          "instructions": "Enter comprehensive description of the deviation and its impact",
+          "screenshot": "/static/images/describe_deviation.png",
+          "validation_criteria": ["Description complete", "Impact documented"],
+          "next_steps": ["attach_evidence"]
+        },
+        {
+          "step_id": "attach_evidence",
+          "title": "Attach Supporting Evidence",
+          "description": "Upload photos and documentation of the quality issue",
+          "instructions": "Attach photos, test reports, and other evidence of the deviation",
+          "screenshot": "/static/images/attach_evidence.png",
+          "validation_criteria": ["Evidence attached", "Documentation complete"],
+          "next_steps": ["propose_corrective_action"]
+        },
+        {
+          "step_id": "propose_corrective_action",
+          "title": "Propose Corrective Actions",
+          "description": "Suggest corrective and preventive actions",
+          "instructions": "Propose immediate corrections and long-term preventive measures",
+          "screenshot": "/static/images/corrective_action.png",
+          "validation_criteria": ["Actions proposed", "Timeline specified"],
+          "next_steps": ["assign_responsibility"]
+        },
+        {
+          "step_id": "assign_responsibility",
+          "title": "Assign Responsibility",
+          "description": "Assign responsible parties for resolution",
+          "instructions": "Assign team members responsible for implementing corrective actions",
+          "screenshot": "/static/images/assign_responsibility.png",
+          "validation_criteria": ["Responsibilities assigned", "Contacts specified"],
+          "next_steps": ["submit_report"]
+        },
+        {
+          "step_id": "submit_report",
+          "title": "Submit Deviation Report",
+          "description": "Final submission of quality deviation report",
+          "instructions": "Review all information and submit the deviation report",
+          "screenshot": "/static/images/submit_report.png",
+          "validation_criteria": ["Report submitted", "Tracking number assigned"],
+          "next_steps": []
+        }
+      ]
+    },
+    "vendor_performance_evaluation": {
+      "title": "Vendor Performance Evaluation",
+      "description": "Conduct periodic evaluation of vendor performance",
+      "category": "supplier_management",
+      "prerequisites": [
+        "Evaluation period completed",
+        "Performance data available",
+        "Evaluation criteria defined"
+      ],
+      "steps": [
+        {
+          "step_id": "access_evaluation_system",
+          "title": "Access Evaluation System",
+          "description": "Navigate to vendor evaluation module",
+          "instructions": "Login and access the Vendor Performance Evaluation system",
+          "screenshot": "/static/images/login_screen.png",
+          "validation_criteria": ["Evaluation system accessed", "Vendor list visible"],
+          "next_steps": ["select_evaluation_period"]
+        },
+        {
+          "step_id": "select_evaluation_period",
+          "title": "Select Evaluation Period",
+          "description": "Choose the period for performance evaluation",
+          "instructions": "Select the evaluation period (quarterly, semi-annual, or annual)",
+          "screenshot": "/static/images/select_period.png",
+          "validation_criteria": ["Period selected", "Data range confirmed"],
+          "next_steps": ["gather_performance_data"]
+        },
+        {
+          "step_id": "gather_performance_data",
+          "title": "Gather Performance Data",
+          "description": "Collect relevant performance metrics and data",
+          "instructions": "Review delivery performance, quality metrics, and compliance data",
+          "screenshot": "/static/images/performance_data.png",
+          "validation_criteria": ["Data collected", "Metrics calculated"],
+          "next_steps": ["evaluate_quality"]
+        },
+        {
+          "step_id": "evaluate_quality",
+          "title": "Evaluate Quality Performance",
+          "description": "Assess quality metrics and standards compliance",
+          "instructions": "Rate quality performance based on defect rates and compliance",
+          "screenshot": "/static/images/evaluate_quality.png",
+          "validation_criteria": ["Quality scored", "Issues documented"],
+          "next_steps": ["evaluate_delivery"]
+        },
+        {
+          "step_id": "evaluate_delivery",
+          "title": "Evaluate Delivery Performance",
+          "description": "Assess on-time delivery and schedule adherence",
+          "instructions": "Rate delivery performance based on timeliness and reliability",
+          "screenshot": "/static/images/evaluate_delivery.png",
+          "validation_criteria": ["Delivery scored", "Trends identified"],
+          "next_steps": ["evaluate_service"]
+        },
+        {
+          "step_id": "evaluate_service",
+          "title": "Evaluate Service Level",
+          "description": "Assess customer service and responsiveness",
+          "instructions": "Rate service quality, communication, and problem resolution",
+          "screenshot": "/static/images/evaluate_service.png",
+          "validation_criteria": ["Service scored", "Feedback documented"],
+          "next_steps": ["calculate_overall_score"]
+        },
+        {
+          "step_id": "calculate_overall_score",
+          "title": "Calculate Overall Score",
+          "description": "Compute weighted overall performance score",
+          "instructions": "Calculate final score using weighted criteria and provide rating",
+          "screenshot": "/static/images/overall_score.png",
+          "validation_criteria": ["Score calculated", "Rating assigned"],
+          "next_steps": ["provide_feedback"]
+        },
+        {
+          "step_id": "provide_feedback",
+          "title": "Provide Improvement Feedback",
+          "description": "Document feedback and improvement recommendations",
+          "instructions": "Provide constructive feedback and improvement suggestions",
+          "screenshot": "/static/images/provide_feedback.png",
+          "validation_criteria": ["Feedback provided", "Recommendations clear"],
+          "next_steps": ["finalize_evaluation"]
+        },
+        {
+          "step_id": "finalize_evaluation",
+          "title": "Finalize Evaluation",
+          "description": "Complete and submit the performance evaluation",
+          "instructions": "Review all scores and feedback, then submit the evaluation",
+          "screenshot": "/static/images/finalize_evaluation.png",
+          "validation_criteria": ["Evaluation finalized", "Results recorded"],
+          "next_steps": []
+        }
+      ]
     }
   },
   "oracle_modules": {
@@ -198,6 +727,33 @@
         "check_supplier_status",
         "view_supplier_performance"
       ]
+    },
+    "contracts": {
+      "description": "Contract management and tracking",
+      "available_queries": [
+        "view_active_contracts",
+        "check_contract_status",
+        "view_contract_performance",
+        "track_renewals"
+      ]
+    },
+    "rfqs": {
+      "description": "Request for Quotation management",
+      "available_queries": [
+        "view_open_rfqs",
+        "check_rfq_status",
+        "view_quotation_history",
+        "track_rfq_deadlines"
+      ]
+    },
+    "analytics": {
+      "description": "Business intelligence and reporting",
+      "available_queries": [
+        "supplier_performance_analytics",
+        "payment_trend_analysis",
+        "contract_utilization_reports",
+        "procurement_insights"
+      ]
     }
   },
   "validation_rules": {
@@ -210,6 +766,67 @@
       "po_or_receipt_required": true,
       "amount_must_match_po": true,
       "invoice_number_unique": true
+    },
+    "supplier_registration": {
+      "business_license_required": true,
+      "tax_id_valid": true,
+      "banking_details_complete": true
+    },
+    "contract_management": {
+      "digital_signature_required": true,
+      "contract_terms_accepted": true
+    },
+    "rfq_response": {
+      "deadline_compliance": true,
+      "technical_specs_addressed": true,
+      "pricing_complete": true
+    },
+    "goods_receipt_confirmation": {
+      "physical_receipt_verified": true,
+      "quantities_match_delivery": true,
+      "quality_inspection_passed": true
+    },
+    "service_entry_sheet": {
+      "service_completion_verified": true,
+      "performance_evidence_attached": true,
+      "quantities_within_po_limits": true
+    },
+    "advance_payment_request": {
+      "bank_guarantee_valid": true,
+      "amount_within_contract_limits": true,
+      "justification_adequate": true
+    },
+    "quality_deviation_report": {
+      "deviation_clearly_described": true,
+      "evidence_attached": true,
+      "corrective_actions_proposed": true
+    },
+    "vendor_performance_evaluation": {
+      "evaluation_period_complete": true,
+      "all_criteria_scored": true,
+      "feedback_constructive": true
+    }
+  },
+  "ai_features": {
+    "smart_suggestions": {
+      "enabled": true,
+      "context_aware": true,
+      "learning_enabled": false
+    },
+    "document_analysis": {
+      "enabled": true,
+      "supported_formats": ["pdf", "docx", "xlsx", "png", "jpg"],
+      "ocr_enabled": false
+    },
+    "predictive_assistance": {
+      "enabled": true,
+      "completion_prediction": true,
+      "error_prevention": true
+    },
+    "multilingual_support": {
+      "enabled": true,
+      "languages": ["en", "fr", "ar"],
+      "auto_detect": true
     }
   }
 }
