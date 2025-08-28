@@ -20,6 +20,7 @@ class ChatRequest(BaseModel):
     message: str = Field(..., description="User's message")
     session_id: str = Field(..., description="Session identifier")
     context: Optional[Dict[str, Any]] = Field(None, description="Additional context")
+    force_language: Optional[str] = Field(None, description="Force specific language (en/fr)")
     
 class ChatMessage(BaseModel):
     type: MessageType
@@ -45,6 +46,9 @@ class SessionState(BaseModel):
     completed_steps: List[str] = []
     workflow_data: Dict[str, Any] = {}
     status: WorkflowStatus = WorkflowStatus.NOT_STARTED
+    preferred_language: str = 'en'
+    language: str = 'en'  # Current session language
+    conversation_history: List[Dict[str, str]] = []
     created_at: datetime = Field(default_factory=datetime.now)
     updated_at: datetime = Field(default_factory=datetime.now)
     
@@ -57,6 +61,7 @@ class ChatResponse(BaseModel):
     suggestions: List[str] = []
     validation_errors: List[str] = []
     oracle_data: Optional[Dict[str, Any]] = None
+    language: Optional[str] = Field('en', description="Response language (en/fr)")
     
 class ProcedureInfo(BaseModel):
     procedure_id: str

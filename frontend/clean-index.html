@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oracle EBS R12 Assistant - Tanger Med</title>
+    <link rel="stylesheet" href="clean-styles.css">
+    <link rel="icon" type="image/png" href="logo_tmpa.png">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>Oracle EBS R12 Assistant</h1>
+            <div class="header-actions">
+                <button class="btn btn-secondary" onclick="resetSession()">
+                    Reset Session
+                </button>
+                <button class="btn btn-secondary" onclick="showHelp()">
+                    Help
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="chat-container">
+                <!-- Chat Messages -->
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message assistant">
+                        <div class="message-avatar">AI</div>
+                        <div class="message-content">
+                            <p><strong>Welcome to Oracle EBS R12 Assistant!</strong></p>
+                            <p>I'm your specialized Oracle E-Business Suite Release 12 expert for Tanger Med. I can help you with:</p>
+                            <ul>
+                                <li><strong>Procedures & Workflows:</strong> Step-by-step guidance for Oracle EBS processes</li>
+                                <li><strong>Troubleshooting:</strong> Resolve Oracle errors and technical issues</li>
+                                <li><strong>i-Supplier Portal:</strong> Supplier registration, invoices, purchase orders</li>
+                                <li><strong>Data Queries:</strong> Search and view Oracle EBS data</li>
+                            </ul>
+                            <p>Ask me anything about Oracle EBS R12 - I'm here to help!</p>
+                            <div class="suggestions">
+                                <button class="suggestion-btn" onclick="sendMessage('What is Oracle EBS?')">What is Oracle EBS?</button>
+                                <button class="suggestion-btn" onclick="sendMessage('Start work confirmation')">Start Work Confirmation</button>
+                                <button class="suggestion-btn" onclick="sendMessage('Show purchase orders')">Show Purchase Orders</button>
+                                <button class="suggestion-btn" onclick="sendMessage('How to resolve ORA-00001 error')">Troubleshoot Errors</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Input Area -->
+                <div class="input-area">
+                    <div class="input-container">
+                        <textarea 
+                            id="messageInput" 
+                            class="input-field" 
+                            placeholder="Ask me about Oracle EBS R12..."
+                            rows="1"
+                            onkeydown="handleKeyDown(event)"
+                        ></textarea>
+                        <button id="sendButton" class="btn send-btn" onclick="sendMessage()">
+                            Send
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="clean-app.js"></script>
+</body>
+</html>

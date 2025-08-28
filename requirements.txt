@@ -14,3 +14,6 @@ asyncpg==0.29.0
 redis==5.0.1
 httpx==0.25.2
 pillow==10.1.0
+google-generativeai==0.3.2
+bleach==6.1.0
+cryptography==41.0.7

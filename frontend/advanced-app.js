@@ -334,11 +334,14 @@ class OracleEBSAssistant {
             return;
         }
 
-        dropdown.innerHTML = suggestions.map(suggestion => `
-            <div class="autocomplete-item" onclick="assistant.selectAutoComplete('${suggestion}')">
-                ${suggestion}
-            </div>
-        `).join('');
+        dropdown.innerHTML = '';
+        suggestions.forEach(suggestion => {
+            const item = document.createElement('div');
+            item.className = 'autocomplete-item';
+            item.textContent = suggestion;
+            item.addEventListener('click', () => this.selectAutoComplete(suggestion));
+            dropdown.appendChild(item);
+        });
         dropdown.style.display = 'block';
     }
 

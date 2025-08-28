@@ -4,23 +4,606 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Oracle EBS R12 i-Supplier Assistant - Tanger Med</title>
+    <link rel="icon" type="image/png" href="logo_tmpa.png">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f5f7fa;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .app-header {
+            background: linear-gradient(135deg, #2aaaff  0%, #314eb7 100%);
+            color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-icon {
+            border-radius: 8px;
+        }
+
+        .logo-text h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .logo-text span {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .header-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 0.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .header-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .main-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 350px;
+            background: white;
+            border-right: 1px solid #e1e5e9;
+            padding: 0;
+            overflow-y: auto;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            box-shadow: 2px 0 15px rgba(102, 126, 234, 0.1);
+        }
+
+        .sidebar.open {
+            transform: translateX(0);
+        }
+
+        .sidebar-header {
+            background: transparent;
+            color: white;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0;
+        }
+
+        .sidebar-header h3 {
+            color: rgb(70, 70, 70);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .close-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: white;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+        
+        .close-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .sidebar-content {
+            padding: 1.5rem;
+        }
+        
+        .session-info {
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.08);
+            border: 1px solid rgba(102, 126, 234, 0.1);
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .info-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .info-item label {
+            color: #4a5568;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-badge {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(72, 187, 120, 0.3);
+        }
+        
+        .session-id {
+            background: #edf2f7;
+            color: #2d3748;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-family: monospace;
+        }
+
+        .sidebar-section {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.08);
+            border: 1px solid rgba(102, 126, 234, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-section:hover {
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.15);
+            transform: translateY(-2px);
+        }
+        
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            color: #2d3748;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        
+        .section-icon {
+            color: #2aaaff;
+            font-size: 1.1rem;
+        }
+
+        .no-procedure {
+            color: #718096;
+            font-style: italic;
+            font-size: 0.9rem;
+            text-align: center;
+            padding: 1rem;
+            background: #f7fafc;
+            border-radius: 8px;
+            border: 2px dashed #cbd5e0;
+        }
+
+        .procedures-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .procedure-btn {
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            border: 1px solid #e2e8f0;
+            padding: 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .procedure-btn:hover {
+            background: linear-gradient(135deg, #2aaaff 0%, #2c58b0 100%);
+            color: white;
+            border-color: #2aaaff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .procedure-icon {
+            font-size: 1.2rem;
+            color: #2aaaff;
+            transition: color 0.3s;
+        }
+        
+        .procedure-btn:hover .procedure-icon {
+            color: white;
+        }
+        
+        .procedure-text {
+            flex: 1;
+        }
+        
+        .procedure-title {
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+        }
+        
+        .procedure-desc {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: white;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+            background: #f8f9fa;
+        }
+
+        .welcome-message {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .welcome-content h2 {
+            color: #2d3748;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .welcome-content p {
+            color: #718096;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .welcome-content ul {
+            text-align: left;
+            max-width: 400px;
+            margin: 0 auto 1.5rem auto;
+        }
+
+        .welcome-content li {
+            color: #4a5568;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .welcome-content li i {
+            color: #48bb78;
+        }
+
+        .get-started {
+            color: #2aaaff;
+            font-weight: 500;
+        }
+
+        .message {
+            margin-bottom: 1.5rem;
+            max-width: 80%;
+        }
+
+        .user-message {
+            margin-left: auto;
+            background: #2aaaff;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 18px 18px 4px 18px;
+        }
+
+        .assistant-message {
+            background: white;
+            border: 1px solid #e2e8f0;
+            padding: 1rem 1.5rem;
+            border-radius: 18px 18px 18px 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .input-container {
+            padding: 1.5rem 2rem;
+            background: white;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .input-wrapper {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        #message-input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 25px;
+            outline: none;
+            font-size: 0.9rem;
+        }
+
+        #message-input:focus {
+            border-color: #2aaaff;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .mic-btn {
+            background: linear-gradient(135deg, #2aaaff, #314eb7);
+            color: white;
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-right: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(42, 170, 255, 0.3);
+        }
+
+        .mic-btn:hover {
+            background: linear-gradient(135deg, #1e90ff, #2c58b0);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(42, 170, 255, 0.4);
+        }
+
+        .mic-btn.listening {
+            background: linear-gradient(135deg, #ff4444, #cc0000);
+            animation: pulse 1.5s infinite;
+            box-shadow: 0 4px 16px rgba(255, 68, 68, 0.5);
+        }
+        
+        .speech-feedback {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1rem;
+            margin: 1rem 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            animation: slideIn 0.3s ease;
+        }
+        
+        .speech-feedback.listening {
+            border-left: 4px solid #2aaaff;
+            background: linear-gradient(135deg, #f0f8ff, #ffffff);
+        }
+        
+        .speech-feedback.processing {
+            border-left: 4px solid #ffa500;
+            background: linear-gradient(135deg, #fff8f0, #ffffff);
+        }
+        
+        .speech-feedback.success {
+            border-left: 4px solid #48bb78;
+            background: linear-gradient(135deg, #f0fff4, #ffffff);
+        }
+        
+        .speech-feedback.error {
+            border-left: 4px solid #e53e3e;
+            background: linear-gradient(135deg, #fff5f5, #ffffff);
+        }
+        
+        .feedback-content {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .feedback-icon {
+            font-size: 1.2rem;
+        }
+        
+        .feedback-message {
+            flex: 1;
+            font-size: 0.9rem;
+            color: #2d3748;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0% { 
+                transform: scale(1);
+                box-shadow: 0 4px 16px rgba(255, 68, 68, 0.5);
+            }
+            50% { 
+                transform: scale(1.05);
+                box-shadow: 0 6px 20px rgba(255, 68, 68, 0.7);
+            }
+            100% { 
+                transform: scale(1);
+                box-shadow: 0 4px 16px rgba(255, 68, 68, 0.5);
+            }
+        }
+
+        .send-btn {
+            background: #2aaaff;
+            color: white;
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .send-btn:hover:not(:disabled) {
+            background: #2aaaff;
+        }
+
+        .send-btn:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+        }
+
+        .input-footer {
+            margin-top: 0.5rem;
+            text-align: center;
+        }
+
+        .help-text {
+            color: #718096;
+            font-size: 0.8rem;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            padding: 1rem 1.5rem;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-body {
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .modal-body img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6c757d;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100vh;
+                z-index: 100;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="app-container">
-        <!-- Header -->
         <header class="app-header">
             <div class="header-content">
                 <div class="logo-section">
-                    <i class="fas fa-robot"></i>
+                    <img src="logo_tmpa.png" alt="Logo" class="logo-icon" height="60">
                     <div class="logo-text">
                         <h1>Oracle EBS Assistant</h1>
                         <span>Tanger Med i-Supplier Portal</span>
                     </div>
                 </div>
                 <div class="header-actions">
+                    <button id="language-btn" class="header-btn" title="Switch Language">
+                        FR
+                    </button>
                     <button id="progress-btn" class="header-btn" title="View Progress">
                         <i class="fas fa-tasks"></i>
                     </button>
@@ -34,60 +617,111 @@
             </div>
         </header>
 
-        <!-- Main Content -->
         <div class="main-content">
-            <!-- Sidebar -->
             <aside class="sidebar" id="sidebar">
                 <div class="sidebar-header">
-                    <h3>Session Info</h3>
+                    <h3><i class="fas fa-cog"></i> Control Panel</h3>
                     <button id="close-sidebar" class="close-btn">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
-                
-                <div class="session-info">
-                    <div class="info-item">
-                        <label>Session ID:</label>
-                        <span id="session-id-display">-</span>
-                    </div>
-                    <div class="info-item">
-                        <label>Status:</label>
-                        <span id="session-status" class="status-badge">Not Started</span>
-                    </div>
-                </div>
 
-                <div class="progress-section">
-                    <h4>Current Procedure</h4>
-                    <div id="current-procedure">
-                        <span class="no-procedure">No active procedure</span>
+                <div class="sidebar-content">
+                    <div class="session-info">
+                        <div class="info-item">
+                            <label><i class="fas fa-id-card"></i> Session ID:</label>
+                            <span id="session-id-display" class="session-id">-</span>
+                        </div>
+                        <div class="info-item">
+                            <label><i class="fas fa-signal"></i> Status:</label>
+                            <span id="session-status" class="status-badge">Active</span>
+                        </div>
+                        <div class="info-item">
+                            <label><i class="fas fa-clock"></i> Uptime:</label>
+                            <span id="session-uptime" class="session-id">00:00</span>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-section">
+                        <div class="section-header">
+                            <i class="fas fa-tasks section-icon"></i>
+                            <span>Current Procedure</span>
+                        </div>
+                        <div id="current-procedure">
+                            <div class="no-procedure">
+                                <i class="fas fa-clipboard-list" style="font-size: 2rem; margin-bottom: 0.5rem; opacity: 0.5; color: #667eea;"></i><br>
+                                No active procedure
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-section">
+                        <div class="section-header">
+                            <i class="fas fa-rocket section-icon"></i>
+                            <span>Quick Actions</span>
+                        </div>
+                        <div class="procedures-list">
+                            <button class="procedure-btn" onclick="sendMessage('Start work confirmation')">
+                                <i class="fas fa-clipboard-check procedure-icon"></i>
+                                <div class="procedure-text">
+                                    <div class="procedure-title">Work Confirmation</div>
+                                    <div class="procedure-desc">Create and submit work confirmations</div>
+                                </div>
+                            </button>
+                            <button class="procedure-btn" onclick="sendMessage('Submit invoice')">
+                                <i class="fas fa-file-invoice procedure-icon"></i>
+                                <div class="procedure-text">
+                                    <div class="procedure-title">Submit Invoice</div>
+                                    <div class="procedure-desc">Process invoice submissions</div>
+                                </div>
+                            </button>
+                            <button class="procedure-btn" onclick="sendMessage('View purchase orders')">
+                                <i class="fas fa-shopping-cart procedure-icon"></i>
+                                <div class="procedure-text">
+                                    <div class="procedure-title">Purchase Orders</div>
+                                    <div class="procedure-desc">View and manage POs</div>
+                                </div>
+                            </button>
+                            <button class="procedure-btn" onclick="sendMessage('Help')">
+                                <i class="fas fa-question-circle procedure-icon"></i>
+                                <div class="procedure-text">
+                                    <div class="procedure-title">Help & Support</div>
+                                    <div class="procedure-desc">Get assistance and guidance</div>
+                                </div>
+                            </button>
+                        </div>
                     </div>
                     
-                    <div id="procedure-progress" class="progress-container" style="display: none;">
-                        <div class="progress-header">
-                            <span id="procedure-title">-</span>
-                            <span id="step-counter">0/0</span>
+                    <div class="sidebar-section">
+                        <div class="section-header">
+                            <i class="fas fa-tools section-icon"></i>
+                            <span>Oracle EBS Tools</span>
                         </div>
-                        <div class="progress-bar">
-                            <div id="progress-fill" class="progress-fill"></div>
+                        <div class="procedures-list">
+                            <button class="procedure-btn" onclick="assistant.testConnection()">
+                                <i class="fas fa-wifi procedure-icon"></i>
+                                <div class="procedure-text">
+                                    <div class="procedure-title">Test Connection</div>
+                                    <div class="procedure-desc">Check backend connectivity</div>
+                                </div>
+                            </button>
+                            <button class="procedure-btn" onclick="sendMessage('Show Oracle modules')">
+                                <i class="fas fa-th-large procedure-icon"></i>
+                                <div class="procedure-text">
+                                    <div class="procedure-title">EBS Modules</div>
+                                    <div class="procedure-desc">Explore available modules</div>
+                                </div>
+                            </button>
                         </div>
-                        <div id="completed-steps" class="steps-list"></div>
-                    </div>
-                </div>
-
-                <div class="procedures-section">
-                    <h4>Available Procedures</h4>
-                    <div id="procedures-list" class="procedures-list">
-                        <div class="loading">Loading procedures...</div>
                     </div>
                 </div>
             </aside>
 
-            <!-- Chat Area -->
             <div class="chat-container">
                 <div class="chat-messages" id="chat-messages">
                     <div class="welcome-message">
                         <div class="welcome-content">
-                            <i class="fas fa-robot welcome-icon"></i>
+                            <img src="logo_tmpa.png" alt="Logo" class="logo-icon" height="90">
                             <h2>Welcome to Oracle EBS R12 i-Supplier Assistant</h2>
                             <p>I'm here to help you navigate Oracle EBS procedures for Tanger Med. I can:</p>
                             <ul>
@@ -96,12 +730,11 @@
                                 <li><i class="fas fa-check"></i> Track your progress through workflows</li>
                                 <li><i class="fas fa-check"></i> Query Oracle modules (POs, invoices, suppliers)</li>
                             </ul>
-                            <p class="get-started">Type a message below or click on a suggestion to get started!</p>
+                            <p class="get-started">Type a message below or use the sidebar quick actions to get started!</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Screenshot Modal -->
                 <div id="screenshot-modal" class="modal">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -111,51 +744,815 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <img id="screenshot-image" src="" alt="Step Screenshot" />
-                            <div id="screenshot-caption"></div>
+                            <img id="screenshot-image" src="" alt="Step Screenshot">
                         </div>
                     </div>
                 </div>
 
-                <!-- Suggestions -->
-                <div class="suggestions-container" id="suggestions-container">
-                    <div class="suggestions" id="suggestions"></div>
-                </div>
-
-                <!-- Input Area -->
                 <div class="input-container">
                     <div class="input-wrapper">
-                        <input 
-                            type="text" 
-                            id="message-input" 
-                            placeholder="Type your message here..." 
-                            autocomplete="off"
-                        >
+                        <input type="text" id="message-input" placeholder="Type your message here..." autocomplete="off">
+                        <button id="mic-btn" class="mic-btn" title="Voice input">
+                            <i class="fas fa-microphone"></i>
+                        </button>
                         <button id="send-btn" class="send-btn" disabled>
                             <i class="fas fa-paper-plane"></i>
                         </button>
                     </div>
                     <div class="input-footer">
-                        <span class="help-text">
-                            Try: "Start work confirmation", "Show purchase orders", or "Help"
-                        </span>
+                        <span class="help-text">Try: "Start work confirmation", "Show purchase orders", or "Help"</span>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- Loading Overlay -->
-        <div id="loading-overlay" class="loading-overlay">
-            <div class="loading-spinner">
-                <i class="fas fa-spinner fa-spin"></i>
-                <span>Processing...</span>
-            </div>
-        </div>
-
-        <!-- Toast Notifications -->
-        <div id="toast-container" class="toast-container"></div>
     </div>
 
-    <script src="app.js"></script>
+    <script>
+        class OracleEBSAssistant {
+            constructor() {
+                this.apiBaseUrl = 'http://localhost:8000';
+                this.sessionId = this.generateSessionId();
+                this.currentProcedure = null;
+                this.currentLanguage = 'en';
+                this.isListening = false;
+                this.recognition = null;
+                this.speechRecognitionAvailable = false;
+                this.speechRetryCount = 0;
+                this.startTime = Date.now();
+                this.requestCount = 0;
+                this.lastRequestTime = 0;
+                this.maxRequestsPerMinute = 30;
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.updateSessionDisplay();
+                this.loadWelcomeMessage();
+                this.startUptimeTimer();
+            }
+
+            setupEventListeners() {
+                const messageInput = document.getElementById('message-input');
+                const sendBtn = document.getElementById('send-btn');
+                
+                messageInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' && !sendBtn.disabled) {
+                        this.sendMessage();
+                    }
+                });
+
+                messageInput.addEventListener('input', () => {
+                    sendBtn.disabled = !messageInput.value.trim();
+                });
+
+                sendBtn.addEventListener('click', () => this.sendMessage());
+                
+                // Sidebar controls
+                document.getElementById('procedures-btn').addEventListener('click', () => {
+                    document.getElementById('sidebar').classList.add('open');
+                });
+
+                document.getElementById('close-sidebar').addEventListener('click', () => {
+                    document.getElementById('sidebar').classList.remove('open');
+                });
+
+                document.getElementById('reset-btn').addEventListener('click', () => this.resetSession());
+                document.getElementById('progress-btn').addEventListener('click', () => this.showProgress());
+                
+                // Language toggle
+                const langBtn = document.getElementById('language-btn');
+                if (langBtn) {
+                    langBtn.addEventListener('click', () => this.toggleLanguage());
+                }
+                
+                // Initialize speech recognition
+                this.initializeSpeechRecognition();
+                
+                // Microphone button
+                const micBtn = document.getElementById('mic-btn');
+                if (micBtn) {
+                    micBtn.addEventListener('click', () => this.toggleSpeechRecognition());
+                }
+            }
+
+            async sendMessage(text = null) {
+                const input = document.getElementById('message-input');
+                const message = text || input.value.trim();
+                
+                if (!message) return;
+                
+                // Security: Input validation and sanitization
+                const sanitizedMessage = this.sanitizeInput(message);
+                if (!this.validateInput(sanitizedMessage)) {
+                    this.addMessageToChat('assistant', 'Invalid input detected. Please avoid special characters and scripts.');
+                    return;
+                }
+                
+                // Rate limiting
+                if (!this.checkRateLimit()) {
+                    this.addMessageToChat('assistant', 'Too many requests. Please wait a moment before sending another message.');
+                    return;
+                }
+
+                this.addMessageToChat('user', sanitizedMessage);
+                
+                if (!text) {
+                    input.value = '';
+                    document.getElementById('send-btn').disabled = true;
+                }
+
+                const loadingMsg = this.addMessageToChat('assistant', 'Thinking...');
+
+                try {
+                    const response = await fetch(`${this.apiBaseUrl}/api/chat`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            message: sanitizedMessage,
+                            session_id: this.sessionId
+                        })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+
+                    const data = await response.json();
+                    loadingMsg.remove();
+                    
+                    // Update language if detected and ensure consistency
+                    if (data.language && data.language !== this.currentLanguage) {
+                        this.currentLanguage = data.language;
+                        this.updateLanguageDisplay();
+                    }
+                    
+                    console.log('API Response:', data); // Debug logging
+                    
+                    this.addMessageToChat('assistant', data.message || 'Sorry, I could not process your request.', {
+                        suggestions: data.suggestions || [],
+                        screenshot: data.screenshot,
+                        currentStep: data.current_step
+                    });
+
+                    if (data.session_state) {
+                        this.updateProgress(data.session_state);
+                    }
+
+                } catch (error) {
+                    console.error('API Error:', error);
+                    loadingMsg.remove();
+                    const errorMsg = this.currentLanguage === 'fr' ? 
+                        `Erreur de connexion : ${error.message}. Veuillez vérifier si le serveur backend fonctionne sur le port 8000.` :
+                        `Connection error: ${error.message}. Please check if the backend server is running on port 8000.`;
+                    this.addMessageToChat('assistant', errorMsg);
+                }
+            }
+
+            addMessageToChat(type, content, extras = {}) {
+                const chatMessages = document.getElementById('chat-messages');
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${type}-message`;
+                
+                const timestamp = new Date().toLocaleTimeString();
+                
+                let messageHTML = `
+                    <div class="message-header">
+                        <span class="message-type">${type === 'user' ? 'You' : 'Assistant'}</span>
+                        <span class="message-time">${timestamp}</span>
+                    </div>
+                    <div class="message-content">${this.formatMessage(content)}</div>
+                `;
+
+                if (extras.suggestions && extras.suggestions.length > 0) {
+                    messageHTML += this.createSuggestionsHTML(extras.suggestions);
+                }
+
+                if (extras.screenshot) {
+                    messageHTML += this.createScreenshotHTML(extras.screenshot);
+                }
+
+                messageDiv.innerHTML = messageHTML;
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                
+                return messageDiv;
+            }
+
+            createSuggestionsHTML(suggestions) {
+                return `
+                    <div style="margin-top: 1rem; padding: 1rem; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #667eea;">
+                        <div style="font-weight: 500; margin-bottom: 0.5rem; color: #2d3748;">Quick Actions:</div>
+                        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                            ${suggestions.map(suggestion => `
+                                <button onclick="assistant.selectSuggestion('${suggestion}')" style="background: #667eea; color: white; border: none; padding: 0.5rem 1rem; border-radius: 20px; cursor: pointer; font-size: 0.8rem;">
+                                    ${suggestion}
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            createScreenshotHTML(screenshot) {
+                return `
+                    <div style="margin-top: 1rem; padding: 1rem; background: #e8f5e8; border-radius: 8px; border-left: 4px solid #48bb78;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-weight: 500; color: #2d3748;">📸 Visual Guide Available</span>
+                            <button onclick="assistant.openScreenshot('${screenshot}')" style="background: #48bb78; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem;">
+                                View Screenshot
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            selectSuggestion(suggestion) {
+                const input = document.getElementById('message-input');
+                input.value = suggestion;
+                this.sendMessage();
+            }
+
+            openScreenshot(screenshot) {
+                console.log('Opening screenshot:', screenshot); // Debug log
+                const modal = document.getElementById('screenshot-modal');
+                const img = document.getElementById('screenshot-image');
+                
+                // Convert relative URL to absolute backend URL
+                let imageUrl = screenshot;
+                if (screenshot.startsWith('/static/')) {
+                    imageUrl = `${this.apiBaseUrl}${screenshot}`;
+                }
+                
+                console.log('Final image URL:', imageUrl);
+                
+                // Add error handling for image loading
+                img.onerror = function() {
+                    console.error('Failed to load image:', imageUrl);
+                    img.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjBmMGYwIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlIG5vdCBhdmFpbGFibGU8L3RleHQ+PC9zdmc+';
+                };
+                
+                img.onload = function() {
+                    console.log('Image loaded successfully:', imageUrl);
+                };
+                
+                img.src = imageUrl;
+                modal.style.display = 'block';
+            }
+
+            updateProgress(sessionState) {
+                console.log('Updating progress:', sessionState);
+                if (sessionState.current_procedure) {
+                    this.currentProcedure = sessionState.current_procedure;
+                    const currentProcedure = document.getElementById('current-procedure');
+                    if (currentProcedure) {
+                        const procedureName = sessionState.current_procedure.replace('_', ' ');
+                        const stepInfo = sessionState.current_step ? ` - Step ${sessionState.current_step}` : '';
+                        const completedSteps = sessionState.completed_steps ? sessionState.completed_steps.length : 0;
+                        
+                        currentProcedure.innerHTML = `
+                            <div style="background: linear-gradient(135deg, #667eea, #2c34b0); color: white; padding: 1rem; border-radius: 10px; text-align: center;">
+                                <div style="font-weight: 600; margin-bottom: 0.5rem;">
+                                    <i class="fas fa-play-circle"></i> ${procedureName}
+                                </div>
+                                <div style="font-size: 0.8rem; opacity: 0.9;">
+                                    ${completedSteps} steps completed${stepInfo}
+                                </div>
+                                <div style="margin-top: 0.5rem;">
+                                    <div style="background: rgba(255,255,255,0.2); height: 4px; border-radius: 2px; overflow: hidden;">
+                                        <div style="background: #48bb78; height: 100%; width: ${Math.min(completedSteps * 20, 100)}%; transition: width 0.3s; box-shadow: 0 0 8px rgba(72, 187, 120, 0.5);"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                } else {
+                    this.currentProcedure = null;
+                    const currentProcedure = document.getElementById('current-procedure');
+                    if (currentProcedure) {
+                        currentProcedure.innerHTML = `
+                            <div class="no-procedure">
+                                <i class="fas fa-clipboard-list" style="font-size: 2rem; margin-bottom: 0.5rem; opacity: 0.5; color: #667eea;"></i><br>
+                                No active procedure
+                            </div>
+                        `;
+                    }
+                }
+            }
+
+            showProgress() {
+                if (this.currentProcedure) {
+                    const progressMsg = this.currentLanguage === 'fr' ? 
+                        `**Procédure actuelle :** ${this.currentProcedure.replace('_', ' ')}\n**Statut :** En cours\n\nVous pouvez continuer avec la procédure actuelle ou en commencer une nouvelle.` :
+                        `**Current Procedure:** ${this.currentProcedure.replace('_', ' ')}\n**Status:** In progress\n\nYou can continue with the current procedure or start a new one.`;
+                    this.addMessageToChat('assistant', progressMsg);
+                } else {
+                    const noProgressMsg = this.currentLanguage === 'fr' ? 
+                        'Aucune procédure active. Commencez une nouvelle procédure pour suivre le progrès.' :
+                        'No active procedure. Start a new procedure to track progress.';
+                    const suggestions = this.currentLanguage === 'fr' ? 
+                        ['Commencer confirmation de travail', 'Soumettre facture', 'Voir les commandes d\'achat'] :
+                        ['Start work confirmation', 'Submit invoice', 'View purchase orders'];
+                    this.addMessageToChat('assistant', noProgressMsg, { suggestions });
+                }
+            }
+
+            async resetSession() {
+                const confirmMsg = this.currentLanguage === 'fr' ? 
+                    'Réinitialiser la session ? Cela effacera tout l\'historique de chat et le progrès du flux de travail.' :
+                    'Reset session? This will clear all chat history and workflow progress.';
+                if (confirm(confirmMsg)) {
+                    try {
+                        // Call backend to reset session
+                        await fetch(`${this.apiBaseUrl}/api/session/${this.sessionId}/reset`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' }
+                        });
+                    } catch (error) {
+                        console.error('Error resetting session:', error);
+                    }
+                    
+                    // Reset frontend state
+                    this.sessionId = this.generateSessionId();
+                    this.currentProcedure = null;
+                    this.startTime = Date.now();
+                    document.getElementById('chat-messages').innerHTML = document.getElementById('chat-messages').querySelector('.welcome-message').outerHTML;
+                    document.getElementById('current-procedure').innerHTML = `
+                        <div class="no-procedure">
+                            <i class="fas fa-clipboard-list" style="font-size: 2rem; margin-bottom: 0.5rem; opacity: 0.5; color: #667eea;"></i><br>
+                            No active procedure
+                        </div>
+                    `;
+                    this.updateSessionDisplay();
+                    
+                    const resetMsg = this.currentLanguage === 'fr' ? 
+                        'Session réinitialisée avec succès. Comment puis-je vous aider ?' :
+                        'Session reset successfully. How can I help you?';
+                    const suggestions = this.currentLanguage === 'fr' ? 
+                        ['Commencer confirmation de travail', 'Soumettre facture', 'Voir les commandes d\'achat', 'Aide'] :
+                        ['Start work confirmation', 'Submit invoice', 'View purchase orders', 'Help'];
+                    this.addMessageToChat('assistant', resetMsg, { suggestions });
+                }
+            }
+
+            updateSessionDisplay() {
+                document.getElementById('session-id-display').textContent = this.sessionId.substring(0, 8) + '...';
+            }
+            
+            startUptimeTimer() {
+                setInterval(() => {
+                    const uptime = Date.now() - this.startTime;
+                    const minutes = Math.floor(uptime / 60000);
+                    const seconds = Math.floor((uptime % 60000) / 1000);
+                    const uptimeDisplay = document.getElementById('session-uptime');
+                    if (uptimeDisplay) {
+                        uptimeDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                    }
+                }, 1000);
+            }
+
+            formatMessage(content) {
+                if (typeof content !== 'string') {
+                    content = String(content);
+                }
+                
+                // Security: Sanitize content before formatting
+                content = this.sanitizeInput(content);
+                
+                return content
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                    .replace(/\n/g, '<br>');
+            }
+
+            generateSessionId() {
+                return 'session_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
+            }
+            
+            sanitizeInput(input) {
+                // Remove potentially dangerous characters and patterns
+                return input
+                    .replace(/<script[^>]*>.*?<\/script>/gi, '')
+                    .replace(/<[^>]*>/g, '')
+                    .replace(/javascript:/gi, '')
+                    .replace(/on\w+\s*=/gi, '')
+                    .replace(/eval\s*\(/gi, '')
+                    .replace(/document\./gi, '')
+                    .replace(/window\./gi, '')
+                    .trim();
+            }
+            
+            validateInput(input) {
+                // Check for suspicious patterns
+                const dangerousPatterns = [
+                    /<script/i,
+                    /javascript:/i,
+                    /on\w+\s*=/i,
+                    /eval\s*\(/i,
+                    /document\./i,
+                    /window\./i,
+                    /<iframe/i,
+                    /<object/i,
+                    /<embed/i
+                ];
+                
+                // Check length
+                if (input.length > 5000) return false;
+                
+                // Check for dangerous patterns
+                for (const pattern of dangerousPatterns) {
+                    if (pattern.test(input)) return false;
+                }
+                
+                return true;
+            }
+            
+            checkRateLimit() {
+                const now = Date.now();
+                const oneMinute = 60 * 1000;
+                
+                // Reset counter if more than a minute has passed
+                if (now - this.lastRequestTime > oneMinute) {
+                    this.requestCount = 0;
+                }
+                
+                // Check if under limit
+                if (this.requestCount >= this.maxRequestsPerMinute) {
+                    return false;
+                }
+                
+                // Increment counter and update time
+                this.requestCount++;
+                this.lastRequestTime = now;
+                return true;
+            }
+            
+            async loadWelcomeMessage() {
+                try {
+                    const response = await fetch(`${this.apiBaseUrl}/api/welcome?lang=${this.currentLanguage}`);
+                    const data = await response.json();
+                    // Welcome message is already shown in HTML, just update if needed
+                } catch (error) {
+                    console.log('Welcome message API not available, using default');
+                }
+            }
+            
+            async toggleLanguage() {
+                this.currentLanguage = this.currentLanguage === 'en' ? 'fr' : 'en';
+                this.updateLanguageDisplay();
+                
+                // Update speech recognition language if available
+                if (this.recognition && this.speechRecognitionAvailable) {
+                    this.recognition.lang = this.currentLanguage === 'fr' ? 'fr-FR' : 'en-US';
+                }
+                
+                // Send explicit language preference to backend
+                try {
+                    const response = await fetch(`${this.apiBaseUrl}/api/chat`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            message: `SET_LANGUAGE_${this.currentLanguage.toUpperCase()}`,
+                            session_id: this.sessionId,
+                            force_language: this.currentLanguage
+                        })
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        const confirmMsg = this.currentLanguage === 'fr' ? 
+                            'Langue changée en français. Toutes les réponses seront maintenant en français.' :
+                            'Language switched to English. All responses will now be in English.';
+                        this.addMessageToChat('assistant', confirmMsg);
+                    }
+                } catch (error) {
+                    console.error('Error setting language:', error);
+                }
+            }
+            
+            updateLanguageDisplay() {
+                const langBtn = document.getElementById('language-btn');
+                if (langBtn) {
+                    langBtn.textContent = this.currentLanguage === 'en' ? 'FR' : 'EN';
+                    langBtn.title = this.currentLanguage === 'en' ? 'Switch to French' : 'Passer à l\'anglais';
+                }
+                this.updateUILanguage();
+            }
+            
+            updateUILanguage() {
+                const translations = {
+                    en: {
+                        'message-placeholder': 'Type your message here...',
+                        'help-text': 'Try: "Start work confirmation", "Show purchase orders", or "Help"',
+                        'sidebar-titles': {
+                            'control-panel': 'Control Panel',
+                            'session-id': 'Session ID',
+                            'status': 'Status', 
+                            'uptime': 'Uptime',
+                            'current-procedure': 'Current Procedure',
+                            'quick-actions': 'Quick Actions',
+                            'oracle-tools': 'Oracle EBS Tools',
+                            'no-procedure': 'No active procedure'
+                        }
+                    },
+                    fr: {
+                        'message-placeholder': 'Tapez votre message ici...',
+                        'help-text': 'Essayez : "Commencer confirmation de travail", "Afficher les commandes d\'achat", ou "Aide"',
+                        'sidebar-titles': {
+                            'control-panel': 'Panneau de Contrôle',
+                            'session-id': 'ID Session',
+                            'status': 'Statut',
+                            'uptime': 'Durée',
+                            'current-procedure': 'Procédure Actuelle',
+                            'quick-actions': 'Actions Rapides',
+                            'oracle-tools': 'Outils Oracle EBS',
+                            'no-procedure': 'Aucune procédure active'
+                        }
+                    }
+                };
+                
+                const currentTranslations = translations[this.currentLanguage];
+                
+                // Update input placeholder
+                const messageInput = document.getElementById('message-input');
+                if (messageInput && currentTranslations['message-placeholder']) {
+                    messageInput.placeholder = currentTranslations['message-placeholder'];
+                }
+                
+                // Update help text
+                const helpText = document.querySelector('.help-text');
+                if (helpText && currentTranslations['help-text']) {
+                    helpText.textContent = currentTranslations['help-text'];
+                }
+                
+                // Update sidebar titles
+                this.updateSidebarLanguage(currentTranslations['sidebar-titles']);
+            }
+            
+            updateSidebarLanguage(titles) {
+                // Update sidebar section headers
+                const sidebarHeader = document.querySelector('.sidebar-header h3');
+                if (sidebarHeader) {
+                    sidebarHeader.innerHTML = `<i class="fas fa-cog"></i> ${titles['control-panel']}`;
+                }
+                
+                // Update session info labels
+                const sessionLabels = document.querySelectorAll('.info-item label');
+                if (sessionLabels.length >= 3) {
+                    sessionLabels[0].innerHTML = `<i class="fas fa-id-card"></i> ${titles['session-id']}:`;
+                    sessionLabels[1].innerHTML = `<i class="fas fa-signal"></i> ${titles['status']}:`;
+                    sessionLabels[2].innerHTML = `<i class="fas fa-clock"></i> ${titles['uptime']}:`;
+                }
+                
+                // Update section headers
+                const sectionHeaders = document.querySelectorAll('.section-header span');
+                if (sectionHeaders.length >= 3) {
+                    sectionHeaders[0].textContent = titles['current-procedure'];
+                    sectionHeaders[1].textContent = titles['quick-actions'];
+                    sectionHeaders[2].textContent = titles['oracle-tools'];
+                }
+            }
+            
+
+            
+
+            
+
+            
+
+
+            initializeSpeechRecognition() {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  if (!SpeechRecognition) {
+    console.log('SpeechRecognition API not supported in this browser.');
+    this.speechRecognitionAvailable = false;
+    this.updateMicrophoneButton(); // keep the button visible but disabled textually if you prefer
+    return;
+  }
+
+  try {
+    this.recognition = new SpeechRecognition();
+    this.recognition.continuous = false;       // Stop after one result
+    this.recognition.interimResults = true;
+    this.recognition.maxAlternatives = 1;
+    this.recognition.lang = this.currentLanguage === 'fr' ? 'fr-FR' : 'en-US';
+
+    this.recognition.onstart = () => {
+      this.isListening = true;
+      this.updateMicrophoneButton();
+      this.showSpeechFeedback('listening', this.currentLanguage === 'fr' ? 'Écoute en cours…' : 'Listening…');
+      console.log('🎤 Speech recognition started');
+    };
+
+    this.recognition.onresult = (event) => {
+      let finalTranscript = '';
+      let interimTranscript = '';
+
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const res = event.results[i];
+        if (res.isFinal) finalTranscript += res[0].transcript;
+        else interimTranscript += res[0].transcript;
+      }
+
+      if (interimTranscript) this.showSpeechFeedback('processing', interimTranscript);
+
+      if (finalTranscript) {
+        this.showSpeechFeedback('success', finalTranscript);
+        const input = document.getElementById('message-input');
+        input.value = finalTranscript.trim();
+        const sendBtn = document.getElementById('send-btn');
+        if (sendBtn) sendBtn.disabled = !input.value.trim();
+        
+        // Stop listening and send message
+        this.isListening = false;
+        this.updateMicrophoneButton();
+        
+        if (input.value.trim()) {
+          setTimeout(() => this.sendMessage(finalTranscript.trim()), 500);
+        }
+      }
+    };
+
+    this.recognition.onerror = (event) => {
+      console.error('🚨 Speech recognition error:', event.error);
+      this.isListening = false;
+      this.updateMicrophoneButton();
+
+      const msg = {
+        'no-speech': { en: 'No speech detected.', fr: 'Aucune parole détectée.' },
+        'audio-capture': { en: 'No microphone found.', fr: 'Aucun microphone détecté.' },
+        'not-allowed': { en: 'Mic permission denied.', fr: 'Permission micro refusée.' },
+        'service-not-allowed': { en: 'Speech service blocked.', fr: 'Service de reconnaissance bloqué.' }
+      }[event.error];
+
+      this.showSpeechFeedback('error', msg ? msg[this.currentLanguage] :
+        (this.currentLanguage === 'fr' ? `Erreur: ${event.error}` : `Error: ${event.error}`));
+    };
+
+    this.recognition.onend = () => {
+      this.isListening = false;
+      this.updateMicrophoneButton();
+      this.hideSpeechFeedback();
+      console.log('🔇 Speech recognition ended');
+    };
+
+    this.speechRecognitionAvailable = true;
+  } catch (error) {
+    console.error('Failed to initialize speech recognition:', error);
+    this.speechRecognitionAvailable = false;
+  }
+
+  this.updateMicrophoneButton();
+}
+
+            
+            async toggleSpeechRecognition() {
+  if (!this.recognition) {
+    this.showSpeechFeedback('error',
+      this.currentLanguage === 'fr' ? 'Reconnaissance vocale non prise en charge.' : 'Speech recognition not supported.');
+    return;
+  }
+  if (this.isListening) this.stopSpeechRecognition();
+  else await this.startSpeechRecognition();
+}
+
+            
+            async startSpeechRecognition() {
+  try {
+    // Ask mic permission first (must be user-gesture initiated)
+    await this.requestMicrophonePermission();
+    this.recognition.lang = this.currentLanguage === 'fr' ? 'fr-FR' : 'en-US';
+    this.isListening = true;
+    this.recognition.start();
+  } catch (error) {
+    console.error('Error starting speech recognition:', error);
+    this.showSpeechFeedback('error',
+      this.currentLanguage === 'fr' ? 'Impossible de démarrer la reconnaissance vocale.' : 'Could not start speech recognition.');
+  }
+}
+
+            
+            stopSpeechRecognition() {
+                if (this.recognition && this.isListening) {
+                    this.recognition.stop();
+                }
+            }
+            
+            async requestMicrophonePermission() {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    stream.getTracks().forEach(track => track.stop());
+                    return true;
+                } catch (error) {
+                    console.error('Microphone permission denied:', error);
+                    const msg = this.currentLanguage === 'fr' ? 
+                        'Permission du microphone requise. Veuillez autoriser l\'accès au microphone.' :
+                        'Microphone permission required. Please allow microphone access.';
+                    this.showSpeechFeedback('error', msg);
+                    throw error;
+                }
+            }
+            
+            updateMicrophoneButton() {
+                const micBtn = document.getElementById('mic-btn');
+                if (!micBtn) return;
+                
+                if (!this.speechRecognitionAvailable) {
+                    micBtn.style.display = 'none';
+                    return;
+                }
+                
+                micBtn.style.display = 'flex';
+                
+                if (this.isListening) {
+                    micBtn.classList.add('listening');
+                    micBtn.innerHTML = '<i class="fas fa-stop"></i>';
+                    micBtn.title = this.currentLanguage === 'fr' ? 'Arrêter l\'enregistrement' : 'Stop recording';
+                } else {
+                    micBtn.classList.remove('listening');
+                    micBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+                    micBtn.title = this.currentLanguage === 'fr' ? 'Commencer l\'enregistrement vocal' : 'Start voice recording';
+                }
+            }
+            
+            showSpeechFeedback(type, message) {
+                this.hideSpeechFeedback();
+                
+                const feedback = document.createElement('div');
+                feedback.id = 'speech-feedback';
+                feedback.className = `speech-feedback ${type}`;
+                
+                const icons = {
+                    listening: '<i class="fas fa-microphone"></i>',
+                    processing: '<i class="fas fa-cog fa-spin"></i>',
+                    success: '<i class="fas fa-check"></i>',
+                    error: '<i class="fas fa-exclamation-triangle"></i>'
+                };
+                
+                feedback.innerHTML = `
+                    <div class="feedback-content">
+                        <div class="feedback-icon">${icons[type] || icons.processing}</div>
+                        <div class="feedback-message">${message || ''}</div>
+                    </div>
+                `;
+                
+                const chatContainer = document.getElementById('chat-messages');
+                if (chatContainer) {
+                    chatContainer.appendChild(feedback);
+                    chatContainer.scrollTop = chatContainer.scrollHeight;
+                }
+                
+                if (type === 'success') {
+                    setTimeout(() => this.hideSpeechFeedback(), 2000);
+                } else if (type === 'error') {
+                    setTimeout(() => this.hideSpeechFeedback(), 5000);
+                }
+            }
+            
+            hideSpeechFeedback() {
+                const feedback = document.getElementById('speech-feedback');
+                if (feedback) {
+                    feedback.remove();
+                }
+            }
+
+            async testConnection() {
+                const loadingMsg = this.addMessageToChat('assistant', 'Testing backend connection...');
+                
+                try {
+                    const response = await fetch(`${this.apiBaseUrl}/api/chat`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            message: 'test connection',
+                            session_id: this.sessionId
+                        })
+                    });
+
+                    const data = await response.json();
+                    loadingMsg.remove();
+                    
+                    this.addMessageToChat('assistant', `✅ **Connection Test Successful!**\n\n**Backend Status:** Online\n**Response Time:** ${Date.now() - performance.now()}ms\n**Session ID:** ${this.sessionId}\n\nAll systems are working correctly. You can now start any procedure.`, {
+                        suggestions: ['Start work confirmation', 'Submit invoice', 'View purchase orders']
+                    });
+
+                } catch (error) {
+                    loadingMsg.remove();
+                    this.addMessageToChat('assistant', `❌ **Connection Test Failed**\n\n**Error:** ${error.message}\n\n**Troubleshooting:**\n• Check if backend server is running on port 8000\n• Verify CORS settings\n• Check network connectivity\n\n**To start backend:** \`cd backend && python -m uvicorn main:app --reload --host 0.0.0.0 --port 8000\``);
+                }
+            }
+        }
+
+        function sendMessage(text) {
+            assistant.sendMessage(text);
+        }
+
+        function closeScreenshotModal() {
+            document.getElementById('screenshot-modal').style.display = 'none';
+        }
+
+        const assistant = new OracleEBSAssistant();
+    </script>
 </body>
 </html>

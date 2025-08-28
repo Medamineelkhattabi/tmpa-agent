@@ -1,0 +1,16 @@
+{
+  "name": "Oracle EBS R12 i-Supplier Assistant",
+  "short_name": "EBS Assistant",
+  "description": "Assistant IA pour Oracle EBS R12 i-Supplier - Tanger Med",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "icons": [
+    {
+      "src": "logo_tmpa.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}

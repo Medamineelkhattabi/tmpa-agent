@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oracle EBS R12 Assistant</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chat-container {
+            width: 90%;
+            max-width: 800px;
+            height: 80vh;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .chat-header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .chat-header p {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            background: #f8f9fa;
+        }
+
+        .message {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message-content {
+            max-width: 70%;
+            padding: 1rem;
+            border-radius: 15px;
+            line-height: 1.5;
+        }
+
+        .message.user .message-content {
+            background: #007bff;
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .message.bot .message-content {
+            background: white;
+            color: #333;
+            border: 1px solid #e9ecef;
+            border-bottom-left-radius: 5px;
+        }
+
+        .message-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .message.user .message-avatar {
+            background: #007bff;
+            color: white;
+        }
+
+        .message.bot .message-avatar {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .chat-input {
+            padding: 1rem;
+            background: white;
+            border-top: 1px solid #e9ecef;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            outline: none;
+            font-size: 1rem;
+        }
+
+        .chat-input input:focus {
+            border-color: #007bff;
+        }
+
+        .send-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+
+        .send-btn:hover {
+            background: #0056b3;
+        }
+
+        .send-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .typing-indicator {
+            display: none;
+            padding: 1rem;
+            color: #666;
+            font-style: italic;
+        }
+
+        .welcome-message {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .welcome-message h2 {
+            margin-bottom: 1rem;
+        }
+
+        .welcome-message ul {
+            text-align: left;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .welcome-message li {
+            margin-bottom: 0.5rem;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            border: 1px solid #f5c6cb;
+        }
+
+        @media (max-width: 768px) {
+            .chat-container {
+                width: 95%;
+                height: 90vh;
+            }
+            
+            .message-content {
+                max-width: 85%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h1><i class="fas fa-database"></i> Oracle EBS R12 Assistant</h1>
+            <p>Your specialized Oracle E-Business Suite Release 12 expert</p>
+        </div>
+        
+        <div class="chat-messages" id="chatMessages">
+            <div class="welcome-message" id="welcomeMessage">
+                <h2>🏢 Welcome to Oracle EBS R12 Assistant!</h2>
+                <p>Loading your specialized Oracle assistant...</p>
+            </div>
+        </div>
+        
+        <div class="typing-indicator" id="typingIndicator">
+            <i class="fas fa-circle-notch fa-spin"></i> Assistant is typing...
+        </div>
+        
+        <div class="chat-input">
+            <input type="text" id="messageInput" placeholder="Ask me anything about Oracle EBS R12..." autocomplete="off">
+            <button class="send-btn" id="sendBtn" disabled>
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        class OracleEBSChat {
+            constructor() {
+                this.apiUrl = 'http://localhost:8000';
+                this.sessionId = this.generateSessionId();
+                this.init();
+            }
+
+            generateSessionId() {
+                return 'session_' + Math.random().toString(36).substr(2, 9);
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.loadWelcomeMessage();
+            }
+
+            setupEventListeners() {
+                const input = document.getElementById('messageInput');
+                const sendBtn = document.getElementById('sendBtn');
+
+                input.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' && !sendBtn.disabled) {
+                        this.sendMessage();
+                    }
+                });
+
+                input.addEventListener('input', () => {
+                    sendBtn.disabled = !input.value.trim();
+                });
+
+                sendBtn.addEventListener('click', () => this.sendMessage());
+            }
+
+            async loadWelcomeMessage() {
+                try {
+                    const response = await fetch(`${this.apiUrl}/api/welcome`);
+                    const data = await response.json();
+                    
+                    const welcomeDiv = document.getElementById('welcomeMessage');
+                    welcomeDiv.innerHTML = this.formatMessage(data.message);
+                } catch (error) {
+                    console.error('Error loading welcome message:', error);
+                    this.showError('Failed to connect to Oracle EBS Assistant. Please ensure the backend server is running.');
+                }
+            }
+
+            async sendMessage() {
+                const input = document.getElementById('messageInput');
+                const message = input.value.trim();
+                
+                if (!message) return;
+
+                // Add user message
+                this.addMessage(message, 'user');
+                input.value = '';
+                document.getElementById('sendBtn').disabled = true;
+
+                // Show typing indicator
+                this.showTyping(true);
+
+                try {
+                    const response = await fetch(`${this.apiUrl}/api/chat`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            message: message,
+                            session_id: this.sessionId
+                        })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+
+                    const data = await response.json();
+                    
+                    // Hide typing indicator and add bot response
+                    this.showTyping(false);
+                    this.addMessage(data.response, 'bot');
+
+                } catch (error) {
+                    console.error('Error sending message:', error);
+                    this.showTyping(false);
+                    this.addMessage('I apologize, but I encountered an error. Please ensure the Oracle EBS Assistant backend is running and try again.', 'bot', true);
+                }
+            }
+
+            addMessage(content, sender, isError = false) {
+                const messagesContainer = document.getElementById('chatMessages');
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${sender}`;
+                
+                if (isError) {
+                    messageDiv.innerHTML = `
+                        <div class="message-avatar">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="message-content error-message">
+                            ${content}
+                        </div>
+                    `;
+                } else {
+                    const avatar = sender === 'user' ? 
+                        '<i class="fas fa-user"></i>' : 
+                        '<i class="fas fa-robot"></i>';
+                    
+                    messageDiv.innerHTML = `
+                        <div class="message-avatar">
+                            ${avatar}
+                        </div>
+                        <div class="message-content">
+                            ${this.formatMessage(content)}
+                        </div>
+                    `;
+                }
+                
+                messagesContainer.appendChild(messageDiv);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+
+            formatMessage(content) {
+                // Convert markdown-like formatting to HTML
+                return content
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                    .replace(/\n/g, '<br>')
+                    .replace(/•/g, '•');
+            }
+
+            showTyping(show) {
+                const indicator = document.getElementById('typingIndicator');
+                indicator.style.display = show ? 'block' : 'none';
+                
+                if (show) {
+                    const messagesContainer = document.getElementById('chatMessages');
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                }
+            }
+
+            showError(message) {
+                const welcomeDiv = document.getElementById('welcomeMessage');
+                welcomeDiv.innerHTML = `
+                    <div class="error-message">
+                        <i class="fas fa-exclamation-triangle"></i> ${message}
+                    </div>
+                `;
+            }
+        }
+
+        // Initialize the chat when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new OracleEBSChat();
+        });
+    </script>
+</body>
+</html>

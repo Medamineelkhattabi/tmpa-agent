@@ -3,7 +3,7 @@ from typing import Dict, Optional
 from datetime import datetime, timedelta
 import json
 
-from .models import SessionState, WorkflowStatus
+from backend.models import SessionState, WorkflowStatus
 
 class SessionManager:
     """
@@ -37,6 +37,9 @@ class SessionManager:
         session = SessionState(
             session_id=session_id,
             status=WorkflowStatus.NOT_STARTED,
+            preferred_language='en',
+            language='en',
+            conversation_history=[],
             created_at=datetime.now(),
             updated_at=datetime.now()
         )
@@ -52,11 +55,16 @@ class SessionManager:
         """Reset session to initial state"""
         if session_id in self.sessions:
             session = self.sessions[session_id]
+            # Preserve language preference when resetting
+            preferred_lang = getattr(session, 'preferred_language', 'en')
+            current_lang = getattr(session, 'language', preferred_lang)
             session.current_procedure = None
             session.current_step = None
             session.completed_steps = []
             session.workflow_data = {}
             session.status = WorkflowStatus.NOT_STARTED
+            session.preferred_language = preferred_lang
+            session.language = current_lang
             session.updated_at = datetime.now()
             
     def delete_session(self, session_id: str):
@@ -129,6 +137,7 @@ class SessionManager:
                 completed_steps=session_data.get("completed_steps", []),
                 workflow_data=session_data.get("workflow_data", {}),
                 status=WorkflowStatus(session_data.get("status", "not_started")),
+                preferred_language=session_data.get("preferred_language", "en"),
                 created_at=datetime.fromisoformat(session_data["created_at"]),
                 updated_at=datetime.fromisoformat(session_data["updated_at"])
             )

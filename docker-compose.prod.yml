@@ -1,0 +1,92 @@
+version: '3.8'
+
+services:
+  oracle-ebs-assistant:
+    build:
+      context: .
+      dockerfile: Dockerfile.production
+    container_name: oracle-ebs-assistant-prod
+    ports:
+      - "80:8000"
+    environment:
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - ENVIRONMENT=production
+      - WORKERS=4
+    volumes:
+      - ./procedures.json:/app/procedures.json:ro
+      - ./static:/app/static:ro
+      - app_logs:/app/logs
+    restart: unless-stopped
+    networks:
+      - oracle-ebs-network
+    depends_on:
+      - redis
+      - postgres
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+  redis:
+    image: redis:7-alpine
+    container_name: oracle-ebs-redis-prod
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    networks:
+      - oracle-ebs-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: oracle-ebs-postgres-prod
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    restart: unless-stopped
+    networks:
+      - oracle-ebs-network
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+
+  nginx:
+    image: nginx:alpine
+    container_name: oracle-ebs-nginx
+    ports:
+      - "443:443"
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - oracle-ebs-assistant
+    restart: unless-stopped
+    networks:
+      - oracle-ebs-network
+
+networks:
+  oracle-ebs-network:
+    driver: bridge
+
+volumes:
+  redis_data:
+  postgres_data:
+  app_logs:

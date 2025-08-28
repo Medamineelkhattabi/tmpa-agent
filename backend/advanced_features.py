@@ -115,8 +115,20 @@ class AdvancedFeaturesManager:
         )
         
         # Add predictive recommendations
-        predictions = await self.predictive_engine.predict_user_needs(session, context)
-        recommendations.extend(predictions)
+        try:
+            predictions = await self.predictive_engine.predict_next_action(session)
+            if predictions.get('action'):
+                recommendations.append(SmartRecommendation(
+                    type=RecommendationType.NEXT_STEP.value,
+                    title=f"Suggested Next Action: {predictions['action']}",
+                    description="Based on your activity pattern",
+                    confidence=predictions.get('confidence', 0.5),
+                    priority=1,
+                    context=context,
+                    actions=[predictions['action']]
+                ))
+        except Exception as e:
+            print(f"Advanced features error: {e}")
         
         return sorted(recommendations, key=lambda x: (x.priority, -x.confidence))
     

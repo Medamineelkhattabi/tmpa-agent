@@ -1,483 +1,393 @@
+// Oracle EBS Assistant - Simple Version
 class OracleEBSAssistant {
     constructor() {
+        this.apiBaseUrl = 'http://localhost:8000';
         this.sessionId = this.generateSessionId();
-        this.apiBaseUrl = 'http://localhost:8000/api';
         this.currentProcedure = null;
-        this.currentStep = null;
-        this.isLoading = false;
+        this.isTyping = false;
+        this.currentLanguage = 'en'; // Default to English
         
-        this.initializeElements();
-        this.bindEvents();
-        this.loadInitialData();
+        this.init();
     }
-    
-    generateSessionId() {
-        return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+
+    init() {
+        this.setupEventListeners();
+        this.loadProcedures();
+        this.updateSessionDisplay();
+        this.loadWelcomeMessage();
     }
-    
-    initializeElements() {
-        // Chat elements
-        this.chatMessages = document.getElementById('chat-messages');
-        this.messageInput = document.getElementById('message-input');
-        this.sendBtn = document.getElementById('send-btn');
-        this.suggestionsContainer = document.getElementById('suggestions-container');
-        this.suggestions = document.getElementById('suggestions');
+
+    setupEventListeners() {
+        const messageInput = document.getElementById('message-input');
+        const sendBtn = document.getElementById('send-btn');
         
-        // Sidebar elements
-        this.sidebar = document.getElementById('sidebar');
-        this.sessionIdDisplay = document.getElementById('session-id-display');
-        this.sessionStatus = document.getElementById('session-status');
-        this.currentProcedureEl = document.getElementById('current-procedure');
-        this.procedureProgress = document.getElementById('procedure-progress');
-        this.procedureTitle = document.getElementById('procedure-title');
-        this.stepCounter = document.getElementById('step-counter');
-        this.progressFill = document.getElementById('progress-fill');
-        this.completedSteps = document.getElementById('completed-steps');
-        this.proceduresList = document.getElementById('procedures-list');
-        
-        // Modal elements
-        this.screenshotModal = document.getElementById('screenshot-modal');
-        this.screenshotImage = document.getElementById('screenshot-image');
-        this.screenshotCaption = document.getElementById('screenshot-caption');
-        
-        // Overlay elements
-        this.loadingOverlay = document.getElementById('loading-overlay');
-        this.toastContainer = document.getElementById('toast-container');
-        
-        // Header buttons
-        this.progressBtn = document.getElementById('progress-btn');
-        this.proceduresBtn = document.getElementById('procedures-btn');
-        this.resetBtn = document.getElementById('reset-btn');
-        this.closeSidebarBtn = document.getElementById('close-sidebar');
-        
-        // Set session ID display
-        this.sessionIdDisplay.textContent = this.sessionId;
-    }
-    
-    bindEvents() {
-        // Input events
-        this.messageInput.addEventListener('input', () => {
-            this.sendBtn.disabled = !this.messageInput.value.trim();
-        });
-        
-        this.messageInput.addEventListener('keypress', (e) => {
+        messageInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
                 this.sendMessage();
             }
         });
-        
-        this.sendBtn.addEventListener('click', () => this.sendMessage());
-        
-        // Header button events
-        this.progressBtn.addEventListener('click', () => this.toggleSidebar());
-        this.proceduresBtn.addEventListener('click', () => this.toggleSidebar());
-        this.resetBtn.addEventListener('click', () => this.resetSession());
-        this.closeSidebarBtn.addEventListener('click', () => this.closeSidebar());
-        
-        // Modal events
-        this.screenshotModal.addEventListener('click', (e) => {
-            if (e.target === this.screenshotModal) {
-                this.closeScreenshotModal();
-            }
+
+        messageInput.addEventListener('input', () => {
+            this.updateSendButtonState();
         });
+
+        sendBtn.addEventListener('click', () => this.sendMessage());
         
-        // Escape key to close modal
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                this.closeScreenshotModal();
-                this.closeSidebar();
-            }
-        });
-    }
-    
-    async loadInitialData() {
-        try {
-            await this.loadProcedures();
-            this.showInitialSuggestions();
-        } catch (error) {
-            console.error('Error loading initial data:', error);
-            this.showToast('Error loading application data', 'error');
+        // Header buttons
+        document.getElementById('progress-btn').addEventListener('click', () => this.showProgress());
+        document.getElementById('procedures-btn').addEventListener('click', () => this.showProcedures());
+        document.getElementById('reset-btn').addEventListener('click', () => this.resetSession());
+        
+        // Language toggle button (if exists)
+        const langBtn = document.getElementById('language-btn');
+        if (langBtn) {
+            langBtn.addEventListener('click', () => this.toggleLanguage());
         }
     }
-    
+
+    async sendMessage() {
+        const input = document.getElementById('message-input');
+        const message = input.value.trim();
+        
+        if (!message) return;
+
+        this.addMessageToChat('user', message);
+        input.value = '';
+        this.updateSendButtonState();
+        this.showTypingIndicator();
+
+        try {
+            const response = await fetch(`${this.apiBaseUrl}/api/chat`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    message: message,
+                    session_id: this.sessionId
+                })
+            });
+
+            const data = await response.json();
+            this.hideTypingIndicator();
+            
+            // Update current language based on response
+            if (data.language) {
+                this.currentLanguage = data.language;
+                this.updateLanguageDisplay();
+            }
+            
+            this.addMessageToChat('assistant', data.response || data.message, {
+                suggestions: data.suggestions,
+                screenshot: data.screenshot,
+                currentStep: data.current_step
+            });
+
+            if (data.session_state) {
+                this.updateProgress(data.session_state);
+            }
+
+        } catch (error) {
+            this.hideTypingIndicator();
+            const errorMsg = this.currentLanguage === 'fr' ? 
+                'Désolé, il y a eu une erreur de connexion. Veuillez réessayer.' :
+                'Sorry, there was a connection error. Please try again.';
+            this.addMessageToChat('assistant', errorMsg);
+        }
+    }
+
+    addMessageToChat(type, content, extras = {}) {
+        const chatMessages = document.getElementById('chat-messages');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${type}-message`;
+        
+        const timestamp = new Date().toLocaleTimeString();
+        
+        let messageHTML = `
+            <div class="message-header">
+                <span class="message-type">${type === 'user' ? 'You' : 'Assistant'}</span>
+                <span class="message-time">${timestamp}</span>
+            </div>
+            <div class="message-content">${this.formatMessage(content)}</div>
+        `;
+
+        if (extras.suggestions && extras.suggestions.length > 0) {
+            messageHTML += this.createSuggestionsHTML(extras.suggestions);
+        }
+
+        if (extras.screenshot) {
+            messageHTML += this.createScreenshotHTML(extras.screenshot);
+        }
+
+        messageDiv.innerHTML = messageHTML;
+        chatMessages.appendChild(messageDiv);
+        
+        this.scrollToBottom();
+    }
+
+    createSuggestionsHTML(suggestions) {
+        return `
+            <div class="suggestions-container">
+                <div class="suggestions-title">Quick Actions:</div>
+                <div class="suggestions-grid">
+                    ${suggestions.map(suggestion => `
+                        <button class="suggestion-btn" onclick="assistant.selectSuggestion('${suggestion}')">
+                            ${suggestion}
+                        </button>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    }
+
+    createScreenshotHTML(screenshot) {
+        return `
+            <div class="screenshot-container">
+                <div class="screenshot-header">
+                    <span>📸 Visual Guide</span>
+                    <button class="screenshot-btn" onclick="assistant.openScreenshot('${screenshot}')">
+                        View Screenshot
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+
+    selectSuggestion(suggestion) {
+        const input = document.getElementById('message-input');
+        input.value = suggestion;
+        this.sendMessage();
+    }
+
+    openScreenshot(screenshot) {
+        const modal = document.getElementById('screenshot-modal');
+        const img = document.getElementById('screenshot-image');
+        img.src = screenshot;
+        modal.style.display = 'block';
+    }
+
     async loadProcedures() {
         try {
-            const response = await fetch(`${this.apiBaseUrl}/procedures`);
+            const response = await fetch(`${this.apiBaseUrl}/api/procedures`);
             const data = await response.json();
-            
-            this.renderProcedures(data.procedures);
+            this.displayProcedures(data.procedures || []);
         } catch (error) {
-            console.error('Error loading procedures:', error);
-            this.proceduresList.innerHTML = '<div class="error">Failed to load procedures</div>';
+            console.error('Failed to load procedures:', error);
         }
     }
-    
-    renderProcedures(procedures) {
-        if (!procedures || procedures.length === 0) {
-            this.proceduresList.innerHTML = '<div class="no-procedures">No procedures available</div>';
+
+    displayProcedures(procedures) {
+        const container = document.getElementById('procedures-list');
+        if (procedures.length === 0) {
+            container.innerHTML = '<div class="no-procedures">No procedures available</div>';
             return;
         }
-        
-        this.proceduresList.innerHTML = procedures.map(proc => `
-            <div class="procedure-item" onclick="app.startProcedure('${proc.procedure_id}')">
-                <h5>${proc.title}</h5>
-                <p>${proc.description}</p>
-                <span class="procedure-category">${proc.category}</span>
+
+        container.innerHTML = procedures.map(proc => `
+            <div class="procedure-item" onclick="assistant.startProcedure('${proc.procedure_id}')">
+                <div class="procedure-title">${proc.title}</div>
+                <div class="procedure-description">${proc.description}</div>
             </div>
         `).join('');
     }
-    
-    showInitialSuggestions() {
-        const initialSuggestions = [
-            'Start work confirmation',
-            'Show purchase orders',
-            'List invoices',
-            'Help'
-        ];
-        
-        this.renderSuggestions(initialSuggestions);
+
+    startProcedure(procedureId) {
+        const input = document.getElementById('message-input');
+        input.value = `Start ${procedureId.replace('_', ' ')}`;
+        this.sendMessage();
     }
-    
-    renderSuggestions(suggestions) {
-        if (!suggestions || suggestions.length === 0) {
-            this.suggestionsContainer.style.display = 'none';
-            return;
-        }
-        
-        this.suggestionsContainer.style.display = 'block';
-        this.suggestions.innerHTML = suggestions.map(suggestion => 
-            `<button class="suggestion-btn" onclick="app.sendSuggestion('${suggestion}')">${suggestion}</button>`
-        ).join('');
-    }
-    
-    async sendMessage(message = null) {
-        const text = message || this.messageInput.value.trim();
-        if (!text || this.isLoading) return;
-        
-        // Clear input and disable send button
-        this.messageInput.value = '';
-        this.sendBtn.disabled = true;
-        
-        // Add user message to chat
-        this.addMessage(text, 'user');
-        
-        // Show loading
-        this.setLoading(true);
-        
-        try {
-            const response = await fetch(`${this.apiBaseUrl}/chat`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    message: text,
-                    session_id: this.sessionId,
-                    context: {}
-                })
-            });
+
+    updateProgress(sessionState) {
+        if (sessionState.current_procedure) {
+            this.currentProcedure = sessionState.current_procedure;
+            const progressContainer = document.getElementById('procedure-progress');
+            const currentProcedure = document.getElementById('current-procedure');
             
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
+            progressContainer.style.display = 'block';
+            currentProcedure.innerHTML = `<span class="active-procedure">${sessionState.current_procedure}</span>`;
             
-            const data = await response.json();
+            document.getElementById('procedure-title').textContent = sessionState.current_procedure;
+            document.getElementById('step-counter').textContent = `${sessionState.completed_steps.length + 1}/10`;
             
-            // Add assistant response
-            this.addMessage(data.message, data.message_type || 'assistant', data);
-            
-            // Update session state
-            this.updateSessionState(data.session_state);
-            
-            // Update current step if provided
-            if (data.current_step) {
-                this.updateCurrentStep(data.current_step);
-            }
-            
-            // Show suggestions
-            if (data.suggestions) {
-                this.renderSuggestions(data.suggestions);
-            }
-            
-            // Show validation errors if any
-            if (data.validation_errors && data.validation_errors.length > 0) {
-                this.showToast('Please complete all requirements before proceeding', 'warning');
-            }
-            
-        } catch (error) {
-            console.error('Error sending message:', error);
-            this.addMessage('Sorry, I encountered an error. Please try again.', 'error');
-            this.showToast('Connection error. Please check your network.', 'error');
-        } finally {
-            this.setLoading(false);
+            const progress = ((sessionState.completed_steps.length + 1) / 10) * 100;
+            document.getElementById('progress-fill').style.width = `${progress}%`;
         }
     }
-    
-    sendSuggestion(suggestion) {
-        this.sendMessage(suggestion);
+
+    showProgress() {
+        if (this.currentProcedure) {
+            const progressMsg = this.currentLanguage === 'fr' ? 
+                `Procédure actuelle : ${this.currentProcedure}\nProgrès : En cours` :
+                `Current procedure: ${this.currentProcedure}\nProgress: In progress`;
+            this.addMessageToChat('assistant', progressMsg);
+        } else {
+            const noProgressMsg = this.currentLanguage === 'fr' ? 
+                'Aucune procédure active. Commencez une nouvelle procédure pour suivre le progrès.' :
+                'No active procedure. Start a new procedure to track progress.';
+            this.addMessageToChat('assistant', noProgressMsg);
+        }
     }
-    
-    addMessage(content, type, data = null) {
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `message ${type}`;
+
+    showProcedures() {
+        const input = document.getElementById('message-input');
+        const proceduresMsg = this.currentLanguage === 'fr' ? 
+            'Afficher les procédures disponibles' :
+            'Show available procedures';
+        input.value = proceduresMsg;
+        this.sendMessage();
+    }
+
+    resetSession() {
+        this.sessionId = this.generateSessionId();
+        this.currentProcedure = null;
+        document.getElementById('chat-messages').innerHTML = '';
+        document.getElementById('procedure-progress').style.display = 'none';
+        const noProcText = this.currentLanguage === 'fr' ? 'Aucune procédure active' : 'No active procedure';
+        document.getElementById('current-procedure').innerHTML = `<span class="no-procedure">${noProcText}</span>`;
+        this.updateSessionDisplay();
         
-        const messageContent = document.createElement('div');
-        messageContent.className = 'message-content';
-        
-        const messageText = document.createElement('div');
-        messageText.className = 'message-text';
-        messageText.innerHTML = this.formatMessage(content);
-        
-        messageContent.appendChild(messageText);
-        
-        // Add screenshot button if available
-        if (data && data.screenshot) {
-            const actionsDiv = document.createElement('div');
-            actionsDiv.className = 'message-actions';
-            
-            const screenshotBtn = document.createElement('button');
-            screenshotBtn.className = 'action-btn screenshot-btn';
-            screenshotBtn.innerHTML = '<i class="fas fa-image"></i> View Screenshot';
-            screenshotBtn.onclick = () => this.showScreenshot(data.screenshot, data.current_step?.title || 'Step Screenshot');
-            
-            actionsDiv.appendChild(screenshotBtn);
-            messageContent.appendChild(actionsDiv);
-        }
-        
-        // Add timestamp
-        const timestamp = document.createElement('div');
-        timestamp.className = 'timestamp';
-        timestamp.textContent = new Date().toLocaleTimeString();
-        messageContent.appendChild(timestamp);
-        
-        messageDiv.appendChild(messageContent);
-        
-        // Remove welcome message if it exists
-        const welcomeMessage = this.chatMessages.querySelector('.welcome-message');
-        if (welcomeMessage) {
-            welcomeMessage.remove();
-        }
-        
-        this.chatMessages.appendChild(messageDiv);
+        const resetMsg = this.currentLanguage === 'fr' ? 
+            'Session réinitialisée. Comment puis-je vous aider ?' :
+            'Session reset. How can I help you?';
+        this.addMessageToChat('assistant', resetMsg);
+    }
+
+    updateSessionDisplay() {
+        document.getElementById('session-id-display').textContent = this.sessionId.substring(0, 8) + '...';
+        document.getElementById('session-status').textContent = 'Active';
+    }
+
+    showTypingIndicator() {
+        this.isTyping = true;
+        const chatMessages = document.getElementById('chat-messages');
+        const indicator = document.createElement('div');
+        indicator.id = 'typing-indicator';
+        indicator.className = 'typing-indicator';
+        indicator.innerHTML = '<span>Assistant is typing...</span>';
+        chatMessages.appendChild(indicator);
         this.scrollToBottom();
     }
-    
+
+    hideTypingIndicator() {
+        this.isTyping = false;
+        const indicator = document.getElementById('typing-indicator');
+        if (indicator) indicator.remove();
+    }
+
+    updateSendButtonState() {
+        const input = document.getElementById('message-input');
+        const button = document.getElementById('send-btn');
+        button.disabled = !input.value.trim();
+    }
+
     formatMessage(content) {
-        // Convert markdown-like formatting to HTML
         return content
             .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
             .replace(/\*(.*?)\*/g, '<em>$1</em>')
-            .replace(/\n/g, '<br>')
-            .replace(/^• (.+)/gm, '<li>$1</li>')
-            .replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+            .replace(/\n/g, '<br>');
     }
-    
-    updateSessionState(sessionState) {
-        if (!sessionState) return;
-        
-        // Update status badge
-        this.sessionStatus.textContent = this.formatStatus(sessionState.status);
-        this.sessionStatus.className = `status-badge ${sessionState.status.replace('_', '-')}`;
-        
-        // Update current procedure
-        if (sessionState.current_procedure) {
-            this.currentProcedure = sessionState.current_procedure;
-            this.currentProcedureEl.innerHTML = `<span class="active-procedure">${sessionState.current_procedure}</span>`;
-            this.showProcedureProgress(sessionState);
-        } else {
-            this.currentProcedure = null;
-            this.currentProcedureEl.innerHTML = '<span class="no-procedure">No active procedure</span>';
-            this.hideProcedureProgress();
-        }
-    }
-    
-    updateCurrentStep(stepData) {
-        this.currentStep = stepData;
-        // Additional step-specific UI updates can be added here
-    }
-    
-    showProcedureProgress(sessionState) {
-        this.procedureProgress.style.display = 'block';
-        
-        // Update procedure title (you might want to fetch the actual title)
-        this.procedureTitle.textContent = sessionState.current_procedure.replace('_', ' ').toUpperCase();
-        
-        // Calculate progress
-        const completedCount = sessionState.completed_steps ? sessionState.completed_steps.length : 0;
-        const totalSteps = this.estimateTotalSteps(sessionState.current_procedure);
-        const currentStepCount = sessionState.current_step ? completedCount + 1 : completedCount;
-        
-        this.stepCounter.textContent = `${currentStepCount}/${totalSteps}`;
-        
-        // Update progress bar
-        const progressPercent = (completedCount / totalSteps) * 100;
-        this.progressFill.style.width = `${progressPercent}%`;
-        
-        // Update completed steps list
-        this.renderCompletedSteps(sessionState.completed_steps, sessionState.current_step);
-    }
-    
-    hideProcedureProgress() {
-        this.procedureProgress.style.display = 'none';
-    }
-    
-    renderCompletedSteps(completedSteps, currentStep) {
-        const steps = completedSteps || [];
-        
-        let stepsHtml = steps.map(step => 
-            `<div class="step-item completed">
-                <i class="fas fa-check-circle"></i>
-                ${this.formatStepName(step)}
-            </div>`
-        ).join('');
-        
-        if (currentStep) {
-            stepsHtml += `<div class="step-item current">
-                <i class="fas fa-circle"></i>
-                ${this.formatStepName(currentStep)}
-            </div>`;
-        }
-        
-        this.completedSteps.innerHTML = stepsHtml;
-    }
-    
-    formatStepName(stepId) {
-        return stepId.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-    }
-    
-    formatStatus(status) {
-        return status.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-    }
-    
-    estimateTotalSteps(procedureId) {
-        // This is a rough estimate - in a real app, you'd get this from the procedure data
-        const stepCounts = {
-            'work_confirmation': 6,
-            'invoice_submission': 6,
-            'view_purchase_orders': 3
-        };
-        return stepCounts[procedureId] || 5;
-    }
-    
-    showScreenshot(screenshotPath, caption) {
-        this.screenshotImage.src = screenshotPath;
-        this.screenshotCaption.textContent = caption;
-        this.screenshotModal.style.display = 'block';
-    }
-    
-    closeScreenshotModal() {
-        this.screenshotModal.style.display = 'none';
-    }
-    
-    async startProcedure(procedureId) {
-        const procedureNames = {
-            'work_confirmation': 'Start work confirmation',
-            'invoice_submission': 'Submit invoice',
-            'view_purchase_orders': 'View purchase orders'
-        };
-        
-        const message = procedureNames[procedureId] || `Start ${procedureId}`;
-        await this.sendMessage(message);
-        this.closeSidebar();
-    }
-    
-    async resetSession() {
-        if (!confirm('Are you sure you want to reset your session? This will clear all progress.')) {
-            return;
-        }
-        
-        try {
-            const response = await fetch(`${this.apiBaseUrl}/session/${this.sessionId}/reset`, {
-                method: 'POST'
-            });
-            
-            if (response.ok) {
-                // Clear chat messages
-                this.chatMessages.innerHTML = `
-                    <div class="welcome-message">
-                        <div class="welcome-content">
-                            <i class="fas fa-robot welcome-icon"></i>
-                            <h2>Session Reset</h2>
-                            <p>Your session has been reset. You can start a new procedure or ask me anything!</p>
-                        </div>
-                    </div>
-                `;
-                
-                // Reset UI state
-                this.currentProcedure = null;
-                this.currentStep = null;
-                this.updateSessionState({ status: 'not_started' });
-                this.showInitialSuggestions();
-                
-                this.showToast('Session reset successfully', 'success');
-            } else {
-                throw new Error('Failed to reset session');
-            }
-        } catch (error) {
-            console.error('Error resetting session:', error);
-            this.showToast('Failed to reset session', 'error');
-        }
-    }
-    
-    toggleSidebar() {
-        if (window.innerWidth <= 768) {
-            this.sidebar.classList.toggle('open');
-        }
-    }
-    
-    closeSidebar() {
-        this.sidebar.classList.remove('open');
-    }
-    
-    setLoading(loading) {
-        this.isLoading = loading;
-        this.loadingOverlay.style.display = loading ? 'block' : 'none';
-        this.sendBtn.disabled = loading || !this.messageInput.value.trim();
-    }
-    
+
     scrollToBottom() {
-        this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
+        const chatMessages = document.getElementById('chat-messages');
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    generateSessionId() {
+        return 'session_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
     }
     
-    showToast(message, type = 'info') {
-        const toast = document.createElement('div');
-        toast.className = `toast ${type}`;
-        toast.textContent = message;
+    async loadWelcomeMessage() {
+        try {
+            const response = await fetch(`${this.apiBaseUrl}/api/welcome?lang=${this.currentLanguage}`);
+            const data = await response.json();
+            this.addMessageToChat('assistant', data.message);
+        } catch (error) {
+            const welcomeMsg = this.currentLanguage === 'fr' ? 
+                'Bienvenue dans l\'Assistant Oracle EBS R12 pour Tanger Med!' :
+                'Welcome to Oracle EBS R12 Assistant for Tanger Med!';
+            this.addMessageToChat('assistant', welcomeMsg);
+        }
+    }
+    
+    toggleLanguage() {
+        this.currentLanguage = this.currentLanguage === 'en' ? 'fr' : 'en';
+        this.updateLanguageDisplay();
         
-        this.toastContainer.appendChild(toast);
+        // Send a language switch message
+        const switchMsg = this.currentLanguage === 'fr' ? 
+            'Bonjour, je peux vous aider en français.' :
+            'Hello, I can help you in English.';
+        this.addMessageToChat('assistant', switchMsg);
+    }
+    
+    updateLanguageDisplay() {
+        const langBtn = document.getElementById('language-btn');
+        if (langBtn) {
+            langBtn.textContent = this.currentLanguage === 'en' ? 'FR' : 'EN';
+            langBtn.title = this.currentLanguage === 'en' ? 'Switch to French' : 'Passer à l\'anglais';
+        }
         
-        // Auto remove after 5 seconds
-        setTimeout(() => {
-            if (toast.parentNode) {
-                toast.parentNode.removeChild(toast);
+        // Update UI text based on language
+        this.updateUILanguage();
+    }
+    
+    updateUILanguage() {
+        const translations = {
+            en: {
+                'message-placeholder': 'Type your message...',
+                'progress-btn': 'Progress',
+                'procedures-btn': 'Procedures',
+                'reset-btn': 'Reset',
+                'send-btn': 'Send',
+                'no-procedure': 'No active procedure',
+                'session-status': 'Active'
+            },
+            fr: {
+                'message-placeholder': 'Tapez votre message...',
+                'progress-btn': 'Progrès',
+                'procedures-btn': 'Procédures',
+                'reset-btn': 'Réinitialiser',
+                'send-btn': 'Envoyer',
+                'no-procedure': 'Aucune procédure active',
+                'session-status': 'Actif'
             }
-        }, 5000);
+        };
         
-        // Remove on click
-        toast.addEventListener('click', () => {
-            if (toast.parentNode) {
-                toast.parentNode.removeChild(toast);
+        const currentTranslations = translations[this.currentLanguage];
+        
+        // Update placeholder
+        const messageInput = document.getElementById('message-input');
+        if (messageInput) {
+            messageInput.placeholder = currentTranslations['message-placeholder'];
+        }
+        
+        // Update button texts
+        const elements = ['progress-btn', 'procedures-btn', 'reset-btn', 'send-btn'];
+        elements.forEach(id => {
+            const element = document.getElementById(id);
+            if (element && currentTranslations[id]) {
+                element.textContent = currentTranslations[id];
             }
         });
+        
+        // Update status texts
+        const sessionStatus = document.getElementById('session-status');
+        if (sessionStatus) {
+            sessionStatus.textContent = currentTranslations['session-status'];
+        }
+    }
+    
+    detectLanguage(text) {
+        const frenchWords = ['bonjour', 'salut', 'merci', 'comment', 'pourquoi', 'aide', 'procédure', 'étape'];
+        const textLower = text.toLowerCase();
+        const frenchCount = frenchWords.filter(word => textLower.includes(word)).length;
+        return frenchCount > 0 ? 'fr' : 'en';
     }
 }
 
-// Global functions for inline event handlers
+// Close screenshot modal
 function closeScreenshotModal() {
-    if (window.app) {
-        window.app.closeScreenshotModal();
-    }
+    document.getElementById('screenshot-modal').style.display = 'none';
 }
 
-// Initialize the application when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    window.app = new OracleEBSAssistant();
-});
-
-// Handle responsive sidebar
-window.addEventListener('resize', () => {
-    if (window.innerWidth > 768 && window.app) {
-        window.app.closeSidebar();
-    }
-});
+// Initialize the assistant
+const assistant = new OracleEBSAssistant();
