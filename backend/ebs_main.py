@@ -16,7 +16,7 @@ app.add_middleware(
 )
 
 # Initialize chatbot with your API key
-API_KEY = "AIzaSyC8pw11h7ppDilnA-ITc8-SmF8daANOhIw"
+API_KEY = "custom_api_key"
 chatbot = None
 
 @app.on_event("startup")
